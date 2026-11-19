@@ -1,0 +1,428 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+"""切枪音效页面。"""
+
+from __future__ import annotations
+
+import os
+
+from PySide6.QtWidgets import (
+    QWidget,
+)
+
+from config import config
+from core.audio.audio_file_utils import (
+    DEFAULT_AUDIO_EXTENSIONS,
+    find_first_audio_file,
+    list_style_dirs_with_audio,
+)
+from core.audio.runtime_audio import get_runtime_audio_manager
+from core.utils.logger import get_logger
+from widgets.preview_feedback import PreviewFailure, report_preview_failure
+from pages.audio_status_badge import (
+    build_health_detail_tooltip,
+    collect_category_health,
+    render_badges,
+    resource_badge,
+    resource_hint,
+)
+from pages.sound_page_base import SoundPageBase
+from widgets.weapon_row_widget import WeaponRowWidget
+
+class SwitchWeaponPage(SoundPageBase, QWidget):
+    """切枪音效设置页面。"""
+    #: UP-057 基类用它决定传给 StyleCreatorDialog 的类别
+    SOUND_CATEGORY = "switch_weapon"
+
+
+    DISABLED_STYLE_TEXT = "不启用"
+
+    CATEGORIES = {
+        "手枪": [
+            "weapon_glock",
+            "weapon_usp_silencer",
+            "weapon_hkp2000",
+            "weapon_p250",
+            "weapon_fiveseven",
+            "weapon_cz75a",
+            "weapon_elite",
+            "weapon_deagle",
+            "weapon_revolver",
+            "weapon_tec9",
+        ],
+        "冲锋枪": [
+            "weapon_mac10",
+            "weapon_mp9",
+            "weapon_mp7",
+            "weapon_ump45",
+            "weapon_p90",
+            "weapon_bizon",
+            "weapon_mp5sd",
+        ],
+        "步枪": [
+            "weapon_ak47",
+            "weapon_m4a1",
+            "weapon_m4a1_silencer",
+            "weapon_famas",
+            "weapon_galilar",
+            "weapon_aug",
+            "weapon_sg556",
+        ],
+        "狙击枪": ["weapon_awp", "weapon_ssg08", "weapon_scar20", "weapon_g3sg1"],
+        "霰弹枪": ["weapon_nova", "weapon_xm1014", "weapon_mag7", "weapon_sawedoff"],
+        "机枪": ["weapon_m249", "weapon_negev"],
+        # ⭐⭐ RN-659（社区报「切出的音效没闪没烟」）：这三个以前不在表里，因为这张表
+        #   跟着 `weapon_kill_sounds` 走，而那张按「能不能杀人」组织 —— 闪光弹杀不了人，
+        #   于是它连**拿得出来**这件事也一起丢了。
+        #   ⭐ 一张表被另一件事的口径划了分母，不合那个口径的东西在这件事上也跟着消失。
+        "投掷物": [
+            "weapon_hegrenade", "weapon_molotov", "weapon_incgrenade",
+            "weapon_flashbang", "weapon_smokegrenade", "weapon_decoy",
+        ],
+        "近战": ["weapon_knife", "weapon_taser"],
+    }
+
+    WEAPON_NAMES = {
+        "weapon_glock": "格洛克-18",
+        "weapon_usp_silencer": "USP消音版",
+        "weapon_hkp2000": "P2000",
+        "weapon_p250": "P250",
+        "weapon_fiveseven": "Five-SeveN",
+        "weapon_cz75a": "CZ75-Auto",
+        "weapon_elite": "双持贝瑞塔",
+        "weapon_deagle": "沙漠之鹰",
+        "weapon_revolver": "R8左轮",
+        "weapon_tec9": "Tec-9",
+        "weapon_mac10": "MAC-10",
+        "weapon_mp9": "MP9",
+        "weapon_mp7": "MP7",
+        "weapon_ump45": "UMP-45",
+        "weapon_p90": "P90",
+        "weapon_bizon": "PP-野牛",
+        "weapon_mp5sd": "MP5-SD",
+        "weapon_ak47": "AK-47",
+        "weapon_m4a1": "M4A4",
+        "weapon_m4a1_silencer": "M4A1消音版",
+        "weapon_famas": "FAMAS",
+        "weapon_galilar": "加利尔AR",
+        "weapon_aug": "AUG",
+        "weapon_sg556": "SG 553",
+        "weapon_awp": "AWP",
+        "weapon_ssg08": "SSG 08",
+        "weapon_scar20": "SCAR-20",
+        "weapon_g3sg1": "G3SG1",
+        "weapon_nova": "Nova",
+        "weapon_xm1014": "XM1014",
+        "weapon_mag7": "MAG-7",
+        "weapon_sawedoff": "截短霰弹枪",
+        "weapon_m249": "M249",
+        "weapon_negev": "内格夫",
+        "weapon_hegrenade": "高爆手雷",
+        "weapon_molotov": "燃烧瓶",
+        "weapon_incgrenade": "燃烧弹",
+        "weapon_flashbang": "闪光弹",
+        "weapon_smokegrenade": "烟雾弹",
+        "weapon_decoy": "诱饵弹",
+        "weapon_knife": "刀",
+        "weapon_taser": "宙斯 x27",
+    }
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.logger = get_logger("SwitchWeaponPage")
+        self.audio_manager = get_runtime_audio_manager()
+        self.weapon_rows: dict[str, WeaponRowWidget] = {}
+        self.weapon_switch_styles: dict[str, list[str]] = {}
+        self._tab_groups = list(self.CATEGORIES.items())
+        self._loading = False
+
+        self.categories = self.CATEGORIES
+        self.weapon_names = self.WEAPON_NAMES
+
+        self._ensure_config_defaults()
+        self.audio_manager.ensure_styles_scanned()
+        self._scan_switch_weapon_styles()
+        self._init_ui()
+        self.load_settings()
+
+        self.logger.info("切枪音效页面初始化完成")
+
+        # UP-038: 直接把 mp3 拖到页面上就打开「新建风格」并预填文件。
+        # StyleCreatorDialog 早就支持 initial_files 了,以前只是没人接这根线——
+        # 用户想加一个音效得先找到菜单里的"新建风格…",再在对话框里选文件。
+        try:
+            from widgets.drop_import_mixin import enable_file_drop
+
+            enable_file_drop(self, DEFAULT_AUDIO_EXTENSIONS, self._on_audio_files_dropped)
+        except Exception:
+            self.logger.exception("音频拖拽导入初始化失败(不影响其它功能)")
+
+    def _ensure_config_defaults(self):
+        if not hasattr(config, "weapon_switch_sounds") or not isinstance(config.weapon_switch_sounds, dict):
+            config.weapon_switch_sounds = {}
+        for weapons in self.CATEGORIES.values():
+            for weapon in weapons:
+                config.weapon_switch_sounds.setdefault(weapon, "0")
+        if not hasattr(config, "switch_weapon_sound_enabled"):
+            config.switch_weapon_sound_enabled = False
+
+    def _get_current_tab_info(self) -> tuple[str, tuple[str, ...]]:
+        if not hasattr(self, "tab_widget") or self.tab_widget.count() == 0 or not self._tab_groups:
+            return ("未分组", tuple())
+        index = self.tab_widget.currentIndex()
+        if index < 0 or index >= len(self._tab_groups):
+            index = 0
+        name, weapons = self._tab_groups[index]
+        return name, tuple(weapons)
+
+    # ------------------------------------------------ R9-D 基类钩子
+    PAGE_TITLE = "切枪音效设置"
+    # RN-034：原文无条件写「先去「基础设置」打开总开关」，而徽章上同时
+    # 明明写着「开关 · 已启用」—— 自相矛盾，外审六发里四发独立点出这一条。
+    # 改成陈述总开关在哪，不再命令用户去做一件可能已经做完的事；
+    # "现在到底开没开"由徽章和底部操作条按状态说（那两处本来就是条件文案）。
+    PAGE_LEAD = "切换武器时播放你自己的音效。逐把枪选风格，点「测试」试听；总开关管它开不开。"
+    HELP_KEY = "switch_weapon"
+    STYLE_TOOLS_MENU = False
+    # RN-147：与 reload_sound 同一个机制——状态卡上写着总开关开没开，
+    # 而开关在「基础设置」。RN-144 升级为就地开关时一并收进来。
+    MASTER_SWITCH_KEY = "switch_weapon_sound_enabled"
+    MASTER_SWITCH_NAME = "切枪音效"
+    # RN-153：本软件不带素材。风格库空的时候，底栏那颗「打开音频资源」
+    # 点开是个空文件夹 —— 换成一条真的走得通的路。
+    COMMUNITY_CATEGORY_KEY = "switch_weapon"
+    EMPTY_PRIMARY_TEXT = "去社区拿一套切枪音效"
+
+    def _init_ui(self):
+        self._build_sound_page_ui()
+
+    def _weapon_styles(self, weapon: str) -> list[str]:
+        return self.weapon_switch_styles.get(weapon, [])
+
+    def _configured_style(self, weapon: str) -> str:
+        return (config.weapon_switch_sounds or {}).get(weapon, "0")
+
+    def _style_options_for(self, weapon: str) -> list[str]:
+        all_options = list(self._get_style_options())
+        for style in self._weapon_styles(weapon):
+            if style not in all_options:
+                all_options.append(style)
+        return all_options
+
+    def _test_weapon(self, weapon: str, level=None) -> None:
+        # RN-037：原来写成 `... if level is None else self._test_switch_sound(weapon, level)`，
+        # 而 `_test_switch_sound()` **只接一个参数** —— 那个分支一旦走到必报 TypeError。
+        # 它没爆过，纯粹因为本页 `TEST_LEVELS is None` ⇒ `WeaponRowWidget` 不建档位菜单、
+        # `testLevelClicked` 永不发射。是死代码，但是**写错的**死代码：哪天给本页
+        # 加上档位试听，第一次点就崩。连杀档位是击杀音效独有的，这里直接忽略 level。
+        del level
+        self._test_switch_sound(weapon)
+
+
+    def _scan_switch_weapon_styles(self):
+        if not hasattr(self.audio_manager, "switch_weapons_dir"):
+            from resource_manager import ResourceManager
+
+            self.audio_manager.switch_weapons_dir = ResourceManager.get_app_data_path("resources/audio/switch_weapons")
+
+        switch_weapons_dir = getattr(self.audio_manager, "switch_weapons_dir", "")
+        self.weapon_switch_styles = {}
+
+        if not os.path.exists(switch_weapons_dir):
+            self.logger.warning(f"切枪音效目录不存在: {switch_weapons_dir}")
+            return
+
+        for weapon in os.listdir(switch_weapons_dir):
+            weapon_path = os.path.join(switch_weapons_dir, weapon)
+            if os.path.isdir(weapon_path):
+                self.weapon_switch_styles[weapon] = list_style_dirs_with_audio(
+                    weapon_path,
+                    extensions=DEFAULT_AUDIO_EXTENSIONS,
+                    sort=True,
+                )
+
+    def _get_style_options(self) -> list[str]:
+        return [self.DISABLED_STYLE_TEXT]
+
+    def _refresh_style_catalog(self):
+        self._scan_switch_weapon_styles()
+        self._loading = True
+        try:
+            generic_options = self._get_style_options()
+            for weapon, weapon_row in self.weapon_rows.items():
+                all_options = list(generic_options)
+                for style in self.weapon_switch_styles.get(weapon, []):
+                    if style not in all_options:
+                        all_options.append(style)
+                weapon_row.update_style_options(all_options)
+                weapon_row.set_current_style(
+                    self._get_style_display_text((config.weapon_switch_sounds or {}).get(weapon, "0"), weapon)
+                )
+        finally:
+            self._loading = False
+
+        self._refresh_status_badge()
+        self.logger.info("切枪音效风格列表已刷新")
+
+    def _on_style_created(self, style_name: str, weapon: str):
+        self._refresh_style_catalog()
+        if weapon and weapon in self.weapon_rows:
+            self.weapon_rows[weapon].set_current_style(style_name)
+            self._on_weapon_style_changed(weapon, style_name)
+        self.logger.info(f"新建风格已就绪: {style_name} (weapon={weapon})")
+
+    def _get_style_display_text(self, style_value: str, weapon: str) -> str:
+        normalized = str(style_value or "0").strip()
+        if normalized in {"", "0"}:
+            return self.DISABLED_STYLE_TEXT
+        if normalized in self.weapon_switch_styles.get(weapon, []):
+            return normalized
+        return self.DISABLED_STYLE_TEXT
+
+    def load_settings(self):
+        self._loading = True
+        try:
+            for weapon, weapon_row in self.weapon_rows.items():
+                style_value = (config.weapon_switch_sounds or {}).get(weapon, "0")
+                display_style = self._get_style_display_text(style_value, weapon)
+                weapon_row.set_current_style(display_style)
+        finally:
+            self._loading = False
+
+        self._refresh_status_badge()
+        self.logger.info("切枪音效设置加载完成")
+
+    def _on_weapon_style_changed(self, weapon: str, style: str):
+        if getattr(self, "_loading", False):
+            return
+
+        normalized = "0" if style == self.DISABLED_STYLE_TEXT else str(style or "0")
+        old_style = (config.weapon_switch_sounds or {}).get(weapon, "0")
+        if old_style == normalized:
+            self._refresh_status_badge()
+            return
+
+        config.weapon_switch_sounds[weapon] = normalized
+        config.save_config()
+        self._refresh_status_badge()
+
+        self.logger.info(f"武器 {weapon} 切枪音效更新: {old_style} -> {normalized}")
+
+    def _test_switch_sound(self, weapon: str):
+        configured = self._configured_style(weapon)
+        if not self._is_style_enabled(configured):
+            report_preview_failure(self, PreviewFailure.NO_STYLE, weapon)
+            return
+        # RN-033：原来直接拿配置的原始值去找目录，于是**那一行明明显示「不启用」**，
+        # 点「测试」却报「文件不存在」—— 用户会去查音频设备/素材，而真正的原因是
+        # 他配的那个风格已经被改名或删掉了。这里先问解析后的值，把话说准。
+        style_value = self._resolved_style(weapon)
+        if not self._is_style_enabled(style_value):
+            report_preview_failure(self, PreviewFailure.STALE_STYLE,
+                                   f"{weapon} · {configured}")
+            return
+
+        sound_key = f"switch-{weapon}-{style_value}"
+        sounds = getattr(self.audio_manager, "_sounds", {})
+
+        if sound_key not in sounds:
+            style_dir = os.path.join(getattr(self.audio_manager, "switch_weapons_dir", ""), weapon, style_value)
+            if not os.path.exists(style_dir):
+                self.logger.warning(f"切枪音效目录不存在: {style_dir}")
+                report_preview_failure(self, PreviewFailure.NO_FILE, f"{weapon} · {style_value}")
+                return
+
+            sound_path = find_first_audio_file(style_dir, extensions=DEFAULT_AUDIO_EXTENSIONS)
+            if not sound_path:
+                self.logger.warning(f"目录中没有音频文件: {style_dir}")
+                report_preview_failure(self, PreviewFailure.NO_FILE, f"{weapon} · {style_value}")
+                return
+
+            self.audio_manager.load_sound(
+                sound_key,
+                sound_path,
+                "switch_weapon",
+                weapon_id=weapon,
+                style=style_value,
+            )
+
+        self.logger.info(f"测试切枪音效: {sound_key}")
+        if not self.audio_manager.play_sound(sound_key, channel_type="switch_weapon"):
+            report_preview_failure(self, PreviewFailure.DEVICE, f"{weapon} · {style_value}")
+
+    def _refresh_status_badge(self, *_args):
+        enabled = bool(getattr(config, "switch_weapon_sound_enabled", False))
+        # RN-033：这三个数原来各走各的口径 —— `selected_count` 数**配置里的原始值**、
+        # `_configured_count_for_weapons` 也数原始值，而下面每一行显示的是
+        # `_get_style_display_text()`（解析不出来就显示「不启用」）。
+        # 于是风格目录一动，顶部写着「已配置 · 3」而三行全是「不启用」，且**无人报错**。
+        # 现在全部走基类的 `_resolved_style()` 这一个真相源，只解析一次。
+        resolved = self._resolved_styles()
+        selected_count = self._configured_weapon_count(resolved=resolved)
+        stale_count = self._stale_weapon_count(resolved)
+        current_tab_name, current_weapons = self._get_current_tab_info()
+        current_count = self._configured_weapon_count(list(current_weapons), resolved=resolved)
+
+        health = collect_category_health(("switch_weapons",))
+        detail_tooltip = build_health_detail_tooltip(health)
+
+        badges = [
+            ("success" if enabled else "warn", f"开关 · {'已开启' if enabled else '未开启'}"),
+            self._configured_badge(selected_count, stale_count),
+            (
+                "success" if current_count else "info",
+                f"分类 · {self._compact_text(current_tab_name)} {current_count}/{len(current_weapons)}",
+            ),
+            # RN-035：分级收进 `resource_badge()` 一份 —— 原先七个音效页各抄一遍，
+            # 七份都把"素材目录还没建"（全新安装的样子）报成**红色异常**。
+            resource_badge(health),
+        ]
+
+        detail_lines = [
+            f"总开关：{'已开启' if enabled else '未开启'}",
+            f"当前分类：{current_tab_name}",
+            f"当前分类已配置：{current_count}/{len(current_weapons)}",
+            f"全部武器已配置：{selected_count}/{sum(len(weapons) for weapons in self.CATEGORIES.values())}",
+            "测试策略：按需加载当前武器目录下的首个可用音频文件",
+        ]
+        preview_names = self._configured_weapon_names(resolved=resolved)
+        if preview_names:
+            detail_lines.append(f"已配置示例：{', '.join(preview_names)}")
+        if detail_tooltip:
+            detail_lines.append(detail_tooltip)
+
+        summary_text = "\n".join(detail_lines)
+        render_badges(self.status_badge_label, badges, detail_tooltip=summary_text)
+        self.summary_label.setText(summary_text)
+        self.summary_label.setToolTip(summary_text)
+        self.status_card.setToolTip(summary_text)
+        # RN-038：这里原本又算了一遍 `_configured_preview_names()`，而上面十行之内
+        # 没有任何东西改变过它的输入 —— 纯重复计算，与 kill_voice 的 RN-014 同形。
+        self.category_overview_title_label.setText(f"当前分类 · {current_tab_name}")
+        self.category_overview_meta_label.setText(
+            f"本分类已配置 {current_count}/{len(current_weapons)} · 全局已配置 {selected_count}/{sum(len(weapons) for weapons in self.CATEGORIES.values())}"
+        )
+        # RN-033/RN-035：这一行是**屏幕上唯一说得清"出了什么事、该怎么办"的地方**
+        # （`summary_label` 是 RN-009 那个建出来就 hide 的死控件，写进去等于没写）。
+        # 优先级：失效项（可行动）> 资源状态（新用户第一次来就该看到的那句）> 已配置示例。
+        if stale_count:
+            self.category_overview_hint_label.setText(self._stale_style_hint(stale_count))
+        elif resource_hint(health):
+            self.category_overview_hint_label.setText(resource_hint(health))
+        elif preview_names:
+            self.category_overview_hint_label.setText(
+                f"已配置示例：{', '.join(preview_names)} · 测试会按需加载首个可用音频文件。"
+            )
+        else:
+            self.category_overview_hint_label.setText("当前还没有启用切枪音效映射，可逐项试听后再配置。")
+        if hasattr(self, "action_bar"):
+            if enabled:
+                action_message = (
+                    f"当前分类：{current_tab_name} · 已配置 {current_count}/{len(current_weapons)}，"
+                    "新增资源后可直接刷新风格列表。"
+                )
+            else:
+                action_message = "总开关当前关闭，这里的映射会保留；如新增资源，可先刷新风格列表，再拨开总开关。"
+            self.action_bar.set_message(action_message)
+        # RN-153：空库时把主按钮换成社区引导（逻辑在基类，只有一份）。
+        # ⚠ 必须放在 set_message **之后** —— 它会覆盖上面那句文案。
+        self._sync_community_guidance()

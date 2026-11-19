@@ -1,0 +1,2941 @@
+{
+  "installed_assets": 587,
+  "bytes": 27157957,
+  "files": [
+    {
+      "file": "icon.ico",
+      "bytes": 41422,
+      "sha256": "a871aaa04abf11676a4bf62b1001073db9a1d55618c8d7f073a42bac69dc0ef2"
+    },
+    {
+      "file": "myicon.ico",
+      "bytes": 41422,
+      "sha256": "a871aaa04abf11676a4bf62b1001073db9a1d55618c8d7f073a42bac69dc0ef2"
+    },
+    {
+      "file": "splash.png",
+      "bytes": 200042,
+      "sha256": "ede7466484ef66f933218f2c6b9a2df4f3a963e0f040ec673db59b5750ba464c"
+    },
+    {
+      "file": "launcher_config.json",
+      "bytes": 58,
+      "sha256": "a4cb726fbd328d2cf4f78af240861a1e5824747941b22387ba268a0d899caf2c"
+    },
+    {
+      "file": "core/search_index.json",
+      "bytes": 81542,
+      "sha256": "f7b620c42df17fc84edae21d224684b5c81f17789c7ae84876adca88a842420e"
+    },
+    {
+      "file": "resources/audio/C4-1.mp3",
+      "bytes": 90919,
+      "sha256": "84cc164ca1b69728b5ec77fdf2e8715e46005b05a17c632c918ba81e4d884d32"
+    },
+    {
+      "file": "resources/audio/death1.mp3",
+      "bytes": 70069,
+      "sha256": "b02ef679106a0c336845d2a1b190666b85a9c6302b584d2bac054789d799f224"
+    },
+    {
+      "file": "resources/audio/death2.mp3",
+      "bytes": 30300,
+      "sha256": "6a80d2a18f805abbc22aa10f7e61e7595d53b9f19ed79d42c6f086a344448b1d"
+    },
+    {
+      "file": "resources/audio/death3.mp3",
+      "bytes": 38603,
+      "sha256": "7b17c09b2f5b9b92a65a9939c3bd4eec72561564ba05535fa556393cab8feb48"
+    },
+    {
+      "file": "resources/audio/kaiguan.mp3",
+      "bytes": 26166,
+      "sha256": "bbf08f799bfbf52c27310f1afd90055e765b9c7094fd88055b55944136e85106"
+    },
+    {
+      "file": "resources/audio/kill_sounds/21冠军/1.mp3",
+      "bytes": 59582,
+      "sha256": "aed5551d6670453ea9fb5c33d5d8ac083f489d912440b0b01c2ba81202120740"
+    },
+    {
+      "file": "resources/audio/kill_sounds/21冠军/2.mp3",
+      "bytes": 59006,
+      "sha256": "453fb487421ec8579be94758933701c90e0d621668d5e4e52b317969460e10c0"
+    },
+    {
+      "file": "resources/audio/kill_sounds/21冠军/3.mp3",
+      "bytes": 59582,
+      "sha256": "5372426076a295c822b12f1317ac1a6b397670c15cd97f7896ba8854801038eb"
+    },
+    {
+      "file": "resources/audio/kill_sounds/21冠军/4.mp3",
+      "bytes": 59006,
+      "sha256": "12ec0d63ea263641fc11d1043c70e3984e594c94daeff17264a5109783fe7971"
+    },
+    {
+      "file": "resources/audio/kill_sounds/21冠军/5.mp3",
+      "bytes": 112579,
+      "sha256": "834610429e969d1da8958407f0d45c911cdf60a49d3ac47ea09d57df1e75ee74"
+    },
+    {
+      "file": "resources/audio/kill_sounds/CF/1.mp3",
+      "bytes": 29430,
+      "sha256": "94b0bc77676191c17018aedf6e85180c54233365cf503fa5edffabbac59443b8"
+    },
+    {
+      "file": "resources/audio/kill_sounds/CF/2.mp3",
+      "bytes": 29430,
+      "sha256": "94b0bc77676191c17018aedf6e85180c54233365cf503fa5edffabbac59443b8"
+    },
+    {
+      "file": "resources/audio/kill_sounds/CF/3.mp3",
+      "bytes": 29430,
+      "sha256": "94b0bc77676191c17018aedf6e85180c54233365cf503fa5edffabbac59443b8"
+    },
+    {
+      "file": "resources/audio/kill_sounds/CF/4.mp3",
+      "bytes": 29430,
+      "sha256": "94b0bc77676191c17018aedf6e85180c54233365cf503fa5edffabbac59443b8"
+    },
+    {
+      "file": "resources/audio/kill_sounds/CF/5.mp3",
+      "bytes": 29430,
+      "sha256": "94b0bc77676191c17018aedf6e85180c54233365cf503fa5edffabbac59443b8"
+    },
+    {
+      "file": "resources/audio/kill_sounds/塑水/1.mp3",
+      "bytes": 54962,
+      "sha256": "c2588f1b9dc853c6b293c1f0ac3ad416ba046f817f028a5fda49c91edea53d28"
+    },
+    {
+      "file": "resources/audio/kill_sounds/塑水/2.mp3",
+      "bytes": 57266,
+      "sha256": "fd65ada86d32550977b051deccf67950e9ee8f41828d03d80e7b28da936d9e46"
+    },
+    {
+      "file": "resources/audio/kill_sounds/塑水/3.mp3",
+      "bytes": 57266,
+      "sha256": "73689fb5a82e7087e2a8300a0e8617ac504188b8ee5f0c8baf9c17ef0363a5f7"
+    },
+    {
+      "file": "resources/audio/kill_sounds/塑水/4.mp3",
+      "bytes": 53234,
+      "sha256": "6533f59693b2b6e042253568e7404bba4138bc172335ca23da40a465f7adadcf"
+    },
+    {
+      "file": "resources/audio/kill_sounds/塑水/5.mp3",
+      "bytes": 103923,
+      "sha256": "383b233110acb11e69542f104a22cc8868b1a1b4a8bdb689390adcdafc806c64"
+    },
+    {
+      "file": "resources/audio/kill_sounds/流脓/1.mp3",
+      "bytes": 60722,
+      "sha256": "7dcad2ef9ce9518edd9c13c4c8769e93052280a413f62bad9dd964d654f0bd19"
+    },
+    {
+      "file": "resources/audio/kill_sounds/流脓/2.mp3",
+      "bytes": 60722,
+      "sha256": "a1621d70c7bfacca7e47f0d96fbcfca685eaef63f5925e5ff3d5b3c0e6e84eeb"
+    },
+    {
+      "file": "resources/audio/kill_sounds/流脓/3.mp3",
+      "bytes": 59570,
+      "sha256": "99fe2c4c34bfc17b7c4fb083b85b30a0dbaa3af76f53da7ee2e805e6e61cedbc"
+    },
+    {
+      "file": "resources/audio/kill_sounds/流脓/4.mp3",
+      "bytes": 59570,
+      "sha256": "df4b5d3bc71a1dde7b8b1683a4205a086bab1b16060af7adbff82110b6cca0ac"
+    },
+    {
+      "file": "resources/audio/kill_sounds/流脓/5.mp3",
+      "bytes": 110839,
+      "sha256": "6dad7829b65cc6fc5497c5c0b05f77e13b40c8362d71b4400b5563448ec7f824"
+    },
+    {
+      "file": "resources/audio/kill_sounds/莲华/1.mp3",
+      "bytes": 61597,
+      "sha256": "d856d753127842ef87eb2a8aaa898f9c76f7a3c4f691f5280f40779cbb9bd269"
+    },
+    {
+      "file": "resources/audio/kill_sounds/莲华/2.mp3",
+      "bytes": 63905,
+      "sha256": "00dcbca1edd59141c362bf397a5a88fad1b7deb0e8c037925dc5473e55cb8221"
+    },
+    {
+      "file": "resources/audio/kill_sounds/莲华/3.mp3",
+      "bytes": 62450,
+      "sha256": "835a545017851b4a63e76024322ee3b6178647af0c4909536cb2f0f5b0e1103c"
+    },
+    {
+      "file": "resources/audio/kill_sounds/莲华/4.mp3",
+      "bytes": 61298,
+      "sha256": "01fcc77e1361a186fa4ace7e4c65110fc9ef480be089ea4cee7ff985d00d0615"
+    },
+    {
+      "file": "resources/audio/kill_sounds/莲华/5.mp3",
+      "bytes": 118903,
+      "sha256": "0ec972a5e1a926d5b32bcadf372a3a76037decddf2ebd220233d8e13a48893d9"
+    },
+    {
+      "file": "resources/audio/kill_voices/CF经典/1-headshot.mp3",
+      "bytes": 12781,
+      "sha256": "c237acea8c0bacca107e9221262ca93b579fe10dbec05caf149f0fb90c15eb52"
+    },
+    {
+      "file": "resources/audio/kill_voices/CF经典/1.mp3",
+      "bytes": 9751,
+      "sha256": "6a30fa5c345801129213200955670a053a20a64383d0ddd850fbf1004ef0a582"
+    },
+    {
+      "file": "resources/audio/kill_voices/CF经典/2.mp3",
+      "bytes": 13351,
+      "sha256": "0be4d6175fc85fea34ff363037adc91b470eb0a155b902dc26b6baae75dd37f9"
+    },
+    {
+      "file": "resources/audio/kill_voices/CF经典/3.mp3",
+      "bytes": 15698,
+      "sha256": "9792fc02fc672d9d3622e8864d88bd3be439079135d1fc8b616b6640bb792226"
+    },
+    {
+      "file": "resources/audio/kill_voices/CF经典/4.mp3",
+      "bytes": 14914,
+      "sha256": "c2eb31fad1e329d6f8e9d0729bbd8ee9daa321a6f77cff7c74ce24b8852eb6ba"
+    },
+    {
+      "file": "resources/audio/kill_voices/CF经典/5.mp3",
+      "bytes": 15385,
+      "sha256": "49c4b36b6c74da99671e72f825f0c6a0882984ab236baef21b2c423d6a1015e4"
+    },
+    {
+      "file": "resources/audio/kill_voices/CF经典/6.mp3",
+      "bytes": 17445,
+      "sha256": "82a16264ea82b7a2d33bf0dd58239952356a90c09b90902d5ba4d4acb938ef2d"
+    },
+    {
+      "file": "resources/audio/kill_voices/CF经典/7.mp3",
+      "bytes": 18879,
+      "sha256": "9aa8982f49cc9fa71f0dc9bca429aca7e219ad7a2e54bd58af583759b1733c15"
+    },
+    {
+      "file": "resources/audio/kill_voices/CF经典/8.mp3",
+      "bytes": 24018,
+      "sha256": "f05ded8cd80c6eb07bf62703bc04a0b370faa72a16d28b8e4aa418531aef75cf"
+    },
+    {
+      "file": "resources/audio/kill_voices/飞虎队/1-headshot.mp3",
+      "bytes": 12193,
+      "sha256": "e0d6daeeefcc1ffd9b9dcb12ba6e1bdf9180a87db3b9bffb9fe36dd01ec25179"
+    },
+    {
+      "file": "resources/audio/kill_voices/飞虎队/1.mp3",
+      "bytes": 48519,
+      "sha256": "9609eb5c77abcb81177e9eb539cd7a354ce91d6cbf4d3a6b8ba324af608d596e"
+    },
+    {
+      "file": "resources/audio/kill_voices/飞虎队/2.mp3",
+      "bytes": 32474,
+      "sha256": "3f51efbadd18c3be792f77650acbcd372164bf02e07b84834bec2568d48b44ad"
+    },
+    {
+      "file": "resources/audio/kill_voices/飞虎队/3.mp3",
+      "bytes": 39962,
+      "sha256": "e2f5c9243d7463c9a8408319072851b92f54b946d6f98e6f4e84d2b57604fe99"
+    },
+    {
+      "file": "resources/audio/kill_voices/飞虎队/4.mp3",
+      "bytes": 49178,
+      "sha256": "62ec8e8a28969d88699e0591c8638b46928819a051e50db8888b10b9685231dc"
+    },
+    {
+      "file": "resources/audio/kill_voices/飞虎队/5.mp3",
+      "bytes": 45722,
+      "sha256": "f7bc2694f6c63b329fb84a8a7d2b07b470cc098ce1eddbea63c1da0ec243bd29"
+    },
+    {
+      "file": "resources/audio/我方还剩一人.mp3",
+      "bytes": 50800,
+      "sha256": "375a263f76f89fb66a80a2ecec8307f853c78933d153d0f9d435bc47b1d6b107"
+    },
+    {
+      "file": "resources/audio/我方还剩一人2.mp3",
+      "bytes": 47920,
+      "sha256": "5ae96a9dfc958fbe11f6294d2f4de98efb2bc891caf27ff852818c3a584accbc"
+    },
+    {
+      "file": "resources/audio/还剩一名敌人.mp3",
+      "bytes": 50800,
+      "sha256": "375a263f76f89fb66a80a2ecec8307f853c78933d153d0f9d435bc47b1d6b107"
+    },
+    {
+      "file": "resources/c4_template.png",
+      "bytes": 451,
+      "sha256": "022f9afd900eb289db73e81ce15375b9c40cad0198c9d5bac717ea9faeaeceea"
+    },
+    {
+      "file": "resources/dust2.png",
+      "bytes": 69202,
+      "sha256": "dfc1933611cf8aad7c6e489c15813d0b5b8f81ee8699be45f1bbe441da5ee0f4"
+    },
+    {
+      "file": "resources/dust2.txt",
+      "bytes": 2718,
+      "sha256": "8db1817e48852d70d47a900721bab527820db0260749431300fe86c3437ced88"
+    },
+    {
+      "file": "resources/gifs/kill1-1.gif",
+      "bytes": 47287,
+      "sha256": "87b73cfd3b16c7cce296f9b5134e2ae11f2beeefa5c3059e4a93a77528d60278"
+    },
+    {
+      "file": "resources/gifs/kill1-2.gif",
+      "bytes": 116250,
+      "sha256": "3aa5efb3fa8f56450a9bde77de5a35afafc4684c291583e45bc0b6fa053a66ce"
+    },
+    {
+      "file": "resources/gifs/kill1-3.gif",
+      "bytes": 113941,
+      "sha256": "81aa76afe5bff99f5f9cb21089b87fd179df05181a4ef0aa39b9394279d336f9"
+    },
+    {
+      "file": "resources/gifs/kill1-4.gif",
+      "bytes": 115965,
+      "sha256": "66fdb60a8c5e8aea7afd88aee08adb7487b561fb8bacd5ab4956d6558d8de39d"
+    },
+    {
+      "file": "resources/gifs/kill1-5.gif",
+      "bytes": 331151,
+      "sha256": "922994923b7e27ed54add91e4ee84491ea418804e4927b64ff7be7a42f933d84"
+    },
+    {
+      "file": "resources/gun audio/awp.wav",
+      "bytes": 159788,
+      "sha256": "39fc1b82c4cd623d492d1219414974d23635aa41d339f1e911678aafeddcda7c"
+    },
+    {
+      "file": "resources/gun audio/awp1.wav",
+      "bytes": 309292,
+      "sha256": "d4f6a89a98b976ce7673731d88490942fbf3250f52cdfe3419dd8be67fdb6fec"
+    },
+    {
+      "file": "resources/gun audio/awp2.wav",
+      "bytes": 297838,
+      "sha256": "b374f6f94e5129d9004282181cb7fbae70f74d78f7783635ac53126dbf4c4aff"
+    },
+    {
+      "file": "resources/gun audio/Desert Eagle1.wav",
+      "bytes": 200434,
+      "sha256": "6eabdb1aa60fbf7ad0aeedf47c67ea623c8f14fe4ebd1e2e6d0cd9b796cfe409"
+    },
+    {
+      "file": "resources/gun audio/Desert Eagle2.wav",
+      "bytes": 230454,
+      "sha256": "ffd8d4f0639b5fa9c8990894ac237c60cc02de6a890e9d52ce596ddd05fd6694"
+    },
+    {
+      "file": "resources/gun audio/usp1.wav",
+      "bytes": 87250,
+      "sha256": "71fddc4e9ac84232b73a7d88462be1c021bd9660b92eb86bbe30d182bca03b4c"
+    },
+    {
+      "file": "resources/gun audio/usp2.wav",
+      "bytes": 86162,
+      "sha256": "e7a98b9a514cf90abccfde5cff319cbc792bbe9d9635b2bc5f55f56a569db28a"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-000.png",
+      "bytes": 12832,
+      "sha256": "0536af4f9608c185ad6537888a2e4aace1003974f40fca77b37dc2d7e211b7d7"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-001.png",
+      "bytes": 9008,
+      "sha256": "3139a022c0e7dfe7b2412e78c2f86b59d22eaa065977aeccecd28bd4e28000eb"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-002.png",
+      "bytes": 9224,
+      "sha256": "39f4efa1db3b09058d0c96284b24f65f598ccfb1289f1d1fb86e9182f58d8569"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-003.png",
+      "bytes": 13576,
+      "sha256": "8f1cd980b99218dbcf55b9bb82cf83e6f81c0be613e5a669827d857a21da61be"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-004.png",
+      "bytes": 29447,
+      "sha256": "a4e0b44ca9292e3e2a084266d00cb4359f03aef5f7c3a1368004ec5150cab75c"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-005.png",
+      "bytes": 28421,
+      "sha256": "59ba294d2cd86f1ab6959feb9dc43cb0b9732994eafe97360d8e1ed1fc411377"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-006.png",
+      "bytes": 30183,
+      "sha256": "c7f31c2c39b4fc8d41868c45fb4a76fd0917f83472be6e8897ec0ed0d0a53250"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-007.png",
+      "bytes": 31814,
+      "sha256": "6ac56a22048f64ecbad37c02b80daee3d79482726b1d7540b24befbe09c1fc5a"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-008.png",
+      "bytes": 33059,
+      "sha256": "ddaf1084ff8baaf3e4a9b9559c64e2bc60a28b390f7e1d69f95ba67c00fc5a37"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-009.png",
+      "bytes": 33654,
+      "sha256": "bef1f5e1cf53101eddc12347e711263e15835b8f7ed95c96e5dd7ed1bf8dc7ad"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-010.png",
+      "bytes": 37501,
+      "sha256": "96b7dd928b8431aa8332a03d0fa9344cfb8dd7362d8a950951bcda72644a6204"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-011.png",
+      "bytes": 37897,
+      "sha256": "dc2e9965de9e2bb891a2436fd8da05aea501d2a5e326d8b88db0aac3c36d674a"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-012.png",
+      "bytes": 41920,
+      "sha256": "385ed161097a07b7af52926fa5fef5c9799833ca1a9adefbba48f4dd96d9aafd"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-013.png",
+      "bytes": 45030,
+      "sha256": "945a77a1a1843d03bf7914c516056d36204c0773c2e9f812c3140c17c5f26707"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-014.png",
+      "bytes": 44717,
+      "sha256": "3689873e9cd8c13e2ed14f715bc38081475ec616cc7612553ee3d881d77691ad"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-015.png",
+      "bytes": 47587,
+      "sha256": "d77e9032d791f985b27a5b849e3df0d234b0edeb6b98c0548a6a315a65cda819"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-016.png",
+      "bytes": 45172,
+      "sha256": "1898ff8b75b14775274f20277850f8ec0822fcb2e834c4dd50f2480c0b4ea5c0"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-017.png",
+      "bytes": 40914,
+      "sha256": "83271fbd8c69f183a085fcc6d4330902846d7421a5c04e473b2b3dbcaf2d2d96"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-018.png",
+      "bytes": 40809,
+      "sha256": "ef86176d5664a7ff4bbd12a42c6254ec7d9eb222b193b8ef4170c3e94417ff01"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-019.png",
+      "bytes": 40689,
+      "sha256": "782c55e845ca5f4d24a3ca58d23103b927ad2727d3e1e0ab6a126dbdc07cf9f2"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-020.png",
+      "bytes": 37526,
+      "sha256": "98ce0ae0c535fb08c40b57a4c5bd2bc4d132e2cd6d4f2d7bd2d006dbc7eecda6"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-021.png",
+      "bytes": 37388,
+      "sha256": "e3ad108e5f0740dbda3b4a2603380000ba605b196718581c866d0ae2e2edb825"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-022.png",
+      "bytes": 36752,
+      "sha256": "7f539236b126338486ac51639db8ef0846b131cb04f91bcecc0e6005c21a3952"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-023.png",
+      "bytes": 36774,
+      "sha256": "829200ff59c44b852ce948f92f2f543e828fe0279665221555cf48a078de3ff7"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-024.png",
+      "bytes": 36041,
+      "sha256": "f2b7195b579b6974f3eb351449cb22a8c767f0d5ed7a83a951e1a8d319853851"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-025.png",
+      "bytes": 36130,
+      "sha256": "147907997d0d618af6c74cfa5dcf717de9674834e5970140f86999ab2e30f74b"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-026.png",
+      "bytes": 36085,
+      "sha256": "f26f40a0b2e21449e49f0eed4ed858164771c39e8c18016b7089d94814dfa3d9"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-027.png",
+      "bytes": 36057,
+      "sha256": "99970a0fba3d17e5eb314fad8225259ecc23b76e0e9ff7c0a4f7097ab2fe3508"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-028.png",
+      "bytes": 36005,
+      "sha256": "ab441795ba4433b446a2d39d798502b0fe13cab205992d55131da398d139e82c"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-029.png",
+      "bytes": 36077,
+      "sha256": "0e183d2c6603f4bc4d9baf557aae523cd3608a3aee24d0ff4d7850f282931ad9"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-030.png",
+      "bytes": 36044,
+      "sha256": "ef167a7029144d42282b89b35f852e6cc08790b786048bca3bdd1016da90f1e0"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-031.png",
+      "bytes": 36069,
+      "sha256": "ef7f5aa397e96609b410c89596046c586a5caa123571c493e570a4edf903c1c0"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-032.png",
+      "bytes": 36110,
+      "sha256": "c87ea7707a5a3e931f0755f1011fa8824c51d31d430ccbf6a683dbcb042ba4ab"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-033.png",
+      "bytes": 36055,
+      "sha256": "3e7647f399ade7d5bfb316583c1fbd6c35b3e5b6126b1d02169152663bb89ebb"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-034.png",
+      "bytes": 36109,
+      "sha256": "c2f3bfce91cb56fa23c7f39cf077e9d498421ab5837df6857cb58881e7624793"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-035.png",
+      "bytes": 36093,
+      "sha256": "12f8b341ac7d8ee44ff96e64d7b8a3198d5ac1642f56d70d0abd7ceb19b71dfe"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-036.png",
+      "bytes": 36083,
+      "sha256": "86f8f80e9746d73f853d69aa45098539f038565e1c5cb2c5f4e8e015220943c6"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-037.png",
+      "bytes": 36083,
+      "sha256": "cdc4b61e6e7eb514bb1ef923472a12f3cdf2e27f69bc76949a1ea2bf8738342b"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-038.png",
+      "bytes": 36083,
+      "sha256": "cdc4b61e6e7eb514bb1ef923472a12f3cdf2e27f69bc76949a1ea2bf8738342b"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-039.png",
+      "bytes": 36083,
+      "sha256": "cdc4b61e6e7eb514bb1ef923472a12f3cdf2e27f69bc76949a1ea2bf8738342b"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-040.png",
+      "bytes": 36083,
+      "sha256": "cdc4b61e6e7eb514bb1ef923472a12f3cdf2e27f69bc76949a1ea2bf8738342b"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-041.png",
+      "bytes": 36083,
+      "sha256": "cdc4b61e6e7eb514bb1ef923472a12f3cdf2e27f69bc76949a1ea2bf8738342b"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-042.png",
+      "bytes": 36083,
+      "sha256": "cdc4b61e6e7eb514bb1ef923472a12f3cdf2e27f69bc76949a1ea2bf8738342b"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-043.png",
+      "bytes": 36083,
+      "sha256": "cdc4b61e6e7eb514bb1ef923472a12f3cdf2e27f69bc76949a1ea2bf8738342b"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-044.png",
+      "bytes": 36083,
+      "sha256": "cdc4b61e6e7eb514bb1ef923472a12f3cdf2e27f69bc76949a1ea2bf8738342b"
+    },
+    {
+      "file": "resources/kill1-1/kill1-1-045.png",
+      "bytes": 36083,
+      "sha256": "cdc4b61e6e7eb514bb1ef923472a12f3cdf2e27f69bc76949a1ea2bf8738342b"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-000.png",
+      "bytes": 15793,
+      "sha256": "c459e461a1f0889ebf04da49cded37b8b7913304487bb257dfa27a145b6b1db3"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-001.png",
+      "bytes": 9612,
+      "sha256": "daea9a1716091df9ffc0110b1bf7c4af49ab088ce793c99f64bb18f40b5c3036"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-002.png",
+      "bytes": 18128,
+      "sha256": "db9e77aad2893c3cf15bf4d2f172a9ac7a97fa204e76fbf6ec4b0a4c6cbb9aba"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-003.png",
+      "bytes": 31912,
+      "sha256": "aa2312f83614827d20149dce48aafd3fc324c6b47def42ca41339c8e0b596642"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-004.png",
+      "bytes": 30873,
+      "sha256": "309f0e75e11388257702817c29be01f01dc11acc2a9f13fdbfd39f0aa639f591"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-005.png",
+      "bytes": 32385,
+      "sha256": "0f280691de33f11200cd2cc33cc3ee30004462c586fa05b99254da96f1301250"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-006.png",
+      "bytes": 33910,
+      "sha256": "418f88298cecfbd64768de284fa9322eb80ec38343f441d918727ccc013cdb5b"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-007.png",
+      "bytes": 35878,
+      "sha256": "027ba764106796a51f056bafe2d709b3824c60389c55e634e993f753caea673d"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-008.png",
+      "bytes": 38651,
+      "sha256": "b5a0c45a83f5b8c67c855896f166765c51e291a4714afc8ef6ede6a8610b4c87"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-009.png",
+      "bytes": 40495,
+      "sha256": "3eb5f4bda1cf0a9393bbc69500713f35fce32ebed975d82b4bc4f0df10d25ea4"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-010.png",
+      "bytes": 43451,
+      "sha256": "04808df50d30f24985f49dfecf6b29fd5a8437be2d4019b0240c90bebf503df2"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-011.png",
+      "bytes": 46317,
+      "sha256": "66e9fc6645e35c666a7af9393e7b805f4bce93969b081877029c5ed4011b7bff"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-012.png",
+      "bytes": 51190,
+      "sha256": "0b31dedff9632acc071ebff7fb3457a8f5860fb21350e84f99f0e15c44d0594d"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-013.png",
+      "bytes": 51250,
+      "sha256": "b55ae5fb6cc3e86f443a737ac9d89425ed433b2f350ed5be991f0fb980865db4"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-014.png",
+      "bytes": 56264,
+      "sha256": "6a9a5e146e545d6bde35a8958bce005027c2e5390972323b895f2c2d31c237c2"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-015.png",
+      "bytes": 53966,
+      "sha256": "8f9fb4d8e7afcbc9ad10bb236a72208b3fd71739581f5c8a4d0c00953eaf9579"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-016.png",
+      "bytes": 52319,
+      "sha256": "8f06a67af882befafb112936393da90d5f6bdfdfee3ab256b0890066af4cc42f"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-017.png",
+      "bytes": 52568,
+      "sha256": "53808de03ffefdbb3b59d92a5e7d9050d9dd8d2ed63883b4a9e99b45e495dbfe"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-018.png",
+      "bytes": 49266,
+      "sha256": "648a615c3cbb623efc044322cb2eb3e5d27181f1d4e782c023d14f6f0324f3bb"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-019.png",
+      "bytes": 49212,
+      "sha256": "935033004ad47e44aab3d09001cb5e55a7ccb4aee3c2a6caed4cd14215860610"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-020.png",
+      "bytes": 48855,
+      "sha256": "caa5dde76bc94db56c7aab4b0e61fb18b51bbb5b0a8e987e523cc7cd5f329db2"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-021.png",
+      "bytes": 48028,
+      "sha256": "a8e9ebc92b0add24ccb52e200a32cb69fa03938424f4f15cf3f0acafb6334089"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-022.png",
+      "bytes": 48919,
+      "sha256": "16dbf8c4b4f550f6f299ab095e7925f957f6facdda8016a8fe87538cbc93426c"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-023.png",
+      "bytes": 48036,
+      "sha256": "67553c5f43291f0f682eb963750ef3220ba1e385758a876b531fdebba3af080b"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-024.png",
+      "bytes": 48706,
+      "sha256": "28bebf00db3ed513cd51763d21e338ec90aad3a56b6368c21e1bab17d3d56992"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-025.png",
+      "bytes": 48497,
+      "sha256": "e325949c03066f86a8ad73191e689ca90ca3273a4deb60f6090af5c3c43af5e4"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-026.png",
+      "bytes": 48343,
+      "sha256": "a71abae0e4a5b83e16e7e2f06101ee5d7305d94fc91e5e31c485a900869fbe8d"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-027.png",
+      "bytes": 48298,
+      "sha256": "7a7f0cc7a790a2a4780426dca0fa65d075a688985dcabd98afe1a693c158e258"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-028.png",
+      "bytes": 46974,
+      "sha256": "5a0baabe2ae0afa5a053a10051f619bf07cde71289dadc588b18782b8d2d1235"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-029.png",
+      "bytes": 47000,
+      "sha256": "24551849bdac831bdc9aaea4d97cbc660c8878c33b91fc8f908b7cd9c48bd0ce"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-030.png",
+      "bytes": 47809,
+      "sha256": "4f508942860fedd068e2b84d4a0aea8b98ace1db4027ad8459eea3d635e91166"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-031.png",
+      "bytes": 46552,
+      "sha256": "79a298b1c8325054ede0de794861efd2087bc8a78ad2d4744e830c7b59bba84e"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-032.png",
+      "bytes": 46569,
+      "sha256": "b81101cfc80a0b6fba1f6315f8cc860c5d388c0f423b815358c61200c146d3ca"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-033.png",
+      "bytes": 46669,
+      "sha256": "5ad0e61a79f787c6eada7bc002da4812786de3baed4368817f16c23d91fe9897"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-034.png",
+      "bytes": 46377,
+      "sha256": "80d826cd012ffb8acda0d4817d83fd91619d3f768c9b5e29a22199c171de3c8e"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-035.png",
+      "bytes": 44154,
+      "sha256": "8c151e0d29ee19a0400d05f8116481425be3f0a2a5bdbd0a42a59d3491ba09eb"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-036.png",
+      "bytes": 44279,
+      "sha256": "45932136df7dff90a3e6cb8f06f301c1de42bbf7ef7cfa07277a56679b896621"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-037.png",
+      "bytes": 44221,
+      "sha256": "186025841ced69f74f04a2ebb6996dd3da528860b03fa66fcb782a68e9963962"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-038.png",
+      "bytes": 44364,
+      "sha256": "d8ea1be112168892f3f253bda981299913410a5af08f3910da09d96d7c6d7bff"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-039.png",
+      "bytes": 44321,
+      "sha256": "9e6a2382b74a5ace727d67cb5834c58fb617a441a07ab07797942df0db07a792"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-040.png",
+      "bytes": 44308,
+      "sha256": "365a4dada9fa9479a607ff5f320de0ac210924721ce5aceb54d53ae95d10f2c4"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-041.png",
+      "bytes": 44392,
+      "sha256": "f33cfe506327eec804e237cda131b519b31e4759d77b27f3c74edc395fe266d8"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-042.png",
+      "bytes": 44313,
+      "sha256": "025fcba7dfeb9e2ea497f0712195a2348a721a9263f86b7e53aa1586f4a95ab0"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-043.png",
+      "bytes": 44091,
+      "sha256": "713cf0e02a881968e9add22168b85a1bc560483b274651cd95c224e184098901"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-044.png",
+      "bytes": 43577,
+      "sha256": "3d5be74f4c1024a845b257626c0847772e4e884ac5a5b4ad75dd7681ddce4c0d"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-045.png",
+      "bytes": 43303,
+      "sha256": "b838cf14c93935e5325688d0bbc0a6bec0c9f2e9e6267d923ef8ef1e06e1e41f"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-046.png",
+      "bytes": 42694,
+      "sha256": "bb601a05134e447514996cf60ea13bfea95493858b2efdcf44f02f039d7e2b5c"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-047.png",
+      "bytes": 42657,
+      "sha256": "026a7714135401a63122d5359f7b4ede1bc566dfdc1c2bdad02f495feba52bb1"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-048.png",
+      "bytes": 42732,
+      "sha256": "652628caed6ff55bceb288f319d98475e7ded5b0657de6bf3ccb8a084b2bc5c8"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-049.png",
+      "bytes": 42720,
+      "sha256": "cfea496f632bb19539f4d798937bcd4b0110f3642adae8274f910ea4aff8435e"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-050.png",
+      "bytes": 42686,
+      "sha256": "9f6475f4f9cc1f00ba7f1a6b455c9dff004521a389fd8f336ed84f3162adf6c5"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-051.png",
+      "bytes": 42686,
+      "sha256": "5b0362455d24970fa4d8212b92cd87b70beb86f240bae20ff467e0668dcfeadb"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-052.png",
+      "bytes": 42787,
+      "sha256": "f0974c8e9fe888901474f12b7f027bcc9b04c685bacb9857d25c605b8dff1529"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-053.png",
+      "bytes": 42631,
+      "sha256": "a465222d3bc8e575bba34cc414f751e4b993ae0a5decd779a82c52f7ae48db4b"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-054.png",
+      "bytes": 42707,
+      "sha256": "3ccf37f05000a3f8619c952a44c750cbbe1c0a3e721bc7b6b7ff4d8b0d2512f7"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-055.png",
+      "bytes": 42711,
+      "sha256": "e91d1fe4ad01d3821e15a0079128614f37dcb49fe87cfa355e161916ab55db6f"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-056.png",
+      "bytes": 42841,
+      "sha256": "e3841a6bcbffa9b1cd114081adcb17f1130a4582f257c266d058a65cec20afa2"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-057.png",
+      "bytes": 42897,
+      "sha256": "0dd4865ba038f5cc341da8cea20d1a284dbad237415c54c98ac049b37e7c28ab"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-058.png",
+      "bytes": 42889,
+      "sha256": "93cc604bb8840eff1a5d819738b16eb721e07581643d31af235ae0605f233716"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-059.png",
+      "bytes": 42821,
+      "sha256": "400f8336e1dd0cc537cdcd92a18e2a6af4e92755fced822cefb70bcb551b6ebd"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-060.png",
+      "bytes": 42790,
+      "sha256": "ef548f97cebe278f8a53c45f9db8094f7596c9e80d2f70299b9d0152c30d1237"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-061.png",
+      "bytes": 42515,
+      "sha256": "09811a3015a7ce75a33d78d7784a947245c6b74007f2abe59b5acf328aa5f702"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-062.png",
+      "bytes": 42820,
+      "sha256": "3b0b3b1fc225eeaa8e87da42f898828be13e5de22f37455ffdaa25010e9941b7"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-063.png",
+      "bytes": 42755,
+      "sha256": "11562cfde765c20ca32712596165247a0ad2507d43446f6549d8e5cf89fe0d38"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-064.png",
+      "bytes": 42646,
+      "sha256": "4cf5914bddee61d994120a665787a5120ee43a8d05a286a55e287bc73a18ed8a"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-065.png",
+      "bytes": 42210,
+      "sha256": "aee7b2e06910a90cac738633cb77eed0b1f465560ebaf9bf027a3d8be73ae2a8"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-066.png",
+      "bytes": 42100,
+      "sha256": "5a8ca66c1b47b829072215312209c2fa21b3da12373d37cfe764d707a36f1924"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-067.png",
+      "bytes": 42030,
+      "sha256": "e5384fe7bcf01df0884e1398b0193e06ab4bd6060582c3677d6a7ecef2a24788"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-068.png",
+      "bytes": 42042,
+      "sha256": "5e3c0cbadb8fbe2bdd1ae31ce64b80248b6a3921fcb634e06c62ea598b4d4a50"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-069.png",
+      "bytes": 40165,
+      "sha256": "27bc1cf8eb4bc7e6e074787bbb35a521ab1abbc85e02abffd4c4711f6f097df7"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-070.png",
+      "bytes": 40056,
+      "sha256": "a14acfccbd91a36729b9e165a23935455680fb7a256e47cbcfc92d85eda726c7"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-071.png",
+      "bytes": 40054,
+      "sha256": "3c06034a63034ff23e0cc129c92e0d7e68bdf7a5b55837a35a766024730aacf2"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-072.png",
+      "bytes": 40012,
+      "sha256": "c36c4249dcf1acfdf57305ca61370bb88b75d54bb79b7f723f7db285a5d1ad4a"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-073.png",
+      "bytes": 39959,
+      "sha256": "71d37180d0a72c1e150e3767c9346b992f5224190d82fac2a3c6b9c9bf0a2153"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-074.png",
+      "bytes": 39997,
+      "sha256": "cecb343c14a632d44f5007b0e311f3b2787c01a26429f506dbccf0190a8dad6d"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-075.png",
+      "bytes": 40022,
+      "sha256": "9c9e2190ff8ed41406d0976c6ad0c8c75052f0ccc8b7cdea249913a30a61d561"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-076.png",
+      "bytes": 40018,
+      "sha256": "a81c1e8ec3135083ce911c7286120e20c3c34e108c0b39b1561e9241d45c4e7d"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-077.png",
+      "bytes": 40004,
+      "sha256": "453a9084c3e25c979b0b1a2cdb03a9f6fd4b9f8a8b743960e84b90e4dbf200ed"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-078.png",
+      "bytes": 39843,
+      "sha256": "8bd02a0cffbd6c5e570df0a937d82a9015b2c65cfd15cc2d8d3d63ea8efc9312"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-079.png",
+      "bytes": 39740,
+      "sha256": "2516455400272153c894fdda79ca6a7be68698d9d4368a34995fa514eb71e368"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-080.png",
+      "bytes": 39645,
+      "sha256": "607874341caf9dfbbba2a0dd35d0e05b07697330418050a498dcdfd334cb9eeb"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-081.png",
+      "bytes": 39363,
+      "sha256": "586c07dc688c98dcfd8644ef2007225c1f662db4647f861068809b9f0fc54463"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-082.png",
+      "bytes": 39059,
+      "sha256": "57be08afbf63fe37a7682313a342a3b63a9883356ad4fe47fcad9ccc93ad0127"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-083.png",
+      "bytes": 38229,
+      "sha256": "ab853b254ddc636304c9e4f3264838940e5eeb8cf52ca8231fca1a77f9bef486"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-084.png",
+      "bytes": 37932,
+      "sha256": "182b2a53e08fcc44410fbd69904fcef23d27f96126bad324794356c89b88635e"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-085.png",
+      "bytes": 37977,
+      "sha256": "0189570b21eda7249cb09a24a310616c393fed79384c1377fc7fc2940a5b1561"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-086.png",
+      "bytes": 38062,
+      "sha256": "3295f210e09578d47171b0bb402bde814876fd139bc98dae9302bef91743a696"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-087.png",
+      "bytes": 38035,
+      "sha256": "43b70f8a15b799b66ac1aeb92f012f14afbcfec4efb96330a8e1455396a6dbc6"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-088.png",
+      "bytes": 38027,
+      "sha256": "028a87d46bff42bbf4478bbc40fe97fec847d63bca85da4c57220f05484d8a6c"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-089.png",
+      "bytes": 38028,
+      "sha256": "de3de5b51c040f1462048f651cf4d3daa7088e2039e0f3bc42ff7a717c837724"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-090.png",
+      "bytes": 38134,
+      "sha256": "82960ec56758c877f1b4c8e065269d4a46ac4f64f30274ebcabd354d7dc58a16"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-091.png",
+      "bytes": 38119,
+      "sha256": "8f507f4794d1cfca7a91c8e50de95eea1a8e0b0083f14b1ed3faa4d87661714e"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-092.png",
+      "bytes": 38099,
+      "sha256": "18e263686f9c87c2baa8db1e315907171035e103f27fabcb4835653b87ac7d4a"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-093.png",
+      "bytes": 38094,
+      "sha256": "754e91748877b6cce0af7922e654f337c90687bead60f1698620824f8f90bec8"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-094.png",
+      "bytes": 38061,
+      "sha256": "cd4563bcc285bdf6ba1d151f4ce5e2a3e960a4bfb699a7ffa3bad6e960318af6"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-095.png",
+      "bytes": 37959,
+      "sha256": "d89987da2ff3d46ef7ae400a2f856b21a334ffe2f454afafaf5418e6c61d2d13"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-096.png",
+      "bytes": 37960,
+      "sha256": "e16e0c9ce27871d2fa815bca2aa7d50b80d1c636384603eda6e9fbc99b2814f5"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-097.png",
+      "bytes": 37937,
+      "sha256": "f87f209c913bd3f2cce9c6f678cdf985369a8a81cb481c4a1a292ff06dec9fda"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-098.png",
+      "bytes": 37739,
+      "sha256": "e5b0790c4ebe2e9be2392b4a28527e15acd987bfa1c8b4ed66e28bbe027cdf75"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-099.png",
+      "bytes": 37787,
+      "sha256": "5b28d0b87eac5f8c4468af1fb99578dd7f377b3fdfedf723e34f4d57ec6bce59"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-100.png",
+      "bytes": 37659,
+      "sha256": "5819ae0f9f7b4bab926e687785b849f4a0f4ef4db0c9ccf580d60cfc4efd2519"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-101.png",
+      "bytes": 37689,
+      "sha256": "3169803c5e605cb72748ab0779be5e5f4061c2e4b77fc79ce3898d5624eb85aa"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-102.png",
+      "bytes": 37844,
+      "sha256": "dcecee24e00830e37409b0a238dba4834ec7cfbdff5b2c6fc4309a7ed1dfa819"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-103.png",
+      "bytes": 37662,
+      "sha256": "86b2b923ae03a8841c19a8b1424c1e4ef29e6fd29d11c1a503e851ee0eb9ae46"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-104.png",
+      "bytes": 37707,
+      "sha256": "b6138b6ec416fcac6e8233a80cf8e06c8f7a55fd82d576e29e3d1398d35b0cb4"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-105.png",
+      "bytes": 37785,
+      "sha256": "f03fad0c23b455e8d0dd9532d7878c0036910c1d089ef51a8f6a8526d327b464"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-106.png",
+      "bytes": 37833,
+      "sha256": "1d1555127c563db252087b3d80ed507bdb22889d4d76f5a884a5dee38e4f5817"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-107.png",
+      "bytes": 37809,
+      "sha256": "4c52d7a6f28068dec95f89de0e857a1915314e4a63af83b28cbb31f875482d11"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-108.png",
+      "bytes": 37910,
+      "sha256": "c850fda015dc3f7e87f1fa015594274d7f80e26989c376cfa51f14ef021f4879"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-109.png",
+      "bytes": 37867,
+      "sha256": "3eeeb6af659e79db928f0fd0ea58a1c17df43ceac052bee3bee3adfd615ba674"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-110.png",
+      "bytes": 37923,
+      "sha256": "ac044d67680b3ff7010478d07467a1c6ce694bbad7c3fb8974d462472396723f"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-111.png",
+      "bytes": 37907,
+      "sha256": "e96d85fc2457cbc0798754cc2a56ff686d69e9bcac8b1eb5af94d12b49599d68"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-112.png",
+      "bytes": 37847,
+      "sha256": "01d98db6685747cdcee878d8b405d18e418a346720b4d9249e0e8be833717289"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-113.png",
+      "bytes": 37796,
+      "sha256": "4ff1d9a75e2e2a94fc1d5710f2d160554bd3a3783a8f54ce6df6b1e76f5b8962"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-114.png",
+      "bytes": 37911,
+      "sha256": "22a7e68f95088bd894e5c0b47957015be14c21c79ece4359ba369ec1faa10f1f"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-115.png",
+      "bytes": 37787,
+      "sha256": "6b5474f0bf377a8bdfa54b0778f43bc9e3070030f4d2a856ea4f3a02fc4290fc"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-116.png",
+      "bytes": 37761,
+      "sha256": "5edc831627ceab85bd36d1ac41fcd3231daafe90e0213e48e16020ad90116dfe"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-117.png",
+      "bytes": 37787,
+      "sha256": "fcccce64685b20f6cd079802980413f77ca10d7858b09b0c0e1e91ac5e452214"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-118.png",
+      "bytes": 37791,
+      "sha256": "65872b0765c56380850cac30bdb35aea03385fa2f893fb473e481cbce192f5f3"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-119.png",
+      "bytes": 37722,
+      "sha256": "1c1d5a1a21230691d2f9500c01941fa4f9a5bde5ae11bc26076f64053a76dffd"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-120.png",
+      "bytes": 37557,
+      "sha256": "94522e0799b26242e2af48c648f3702b02d574a5e092e11357f5f268599fab59"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-121.png",
+      "bytes": 37572,
+      "sha256": "8cd3c7c320e9ef24909e5bf5e8828e10a9cad775cce3870e3489d931070efca4"
+    },
+    {
+      "file": "resources/kill1-2/kill1-2-122.png",
+      "bytes": 37572,
+      "sha256": "b784ed1b49cfe4b35fd1b4d32839a41e48cc4cac9ca54df569af490e798cb99e"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-000.png",
+      "bytes": 8274,
+      "sha256": "dbac886e9b29a2964fef4cec4c325d37d708d7a05ccbcd6b96c86046f81d3b35"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-001.png",
+      "bytes": 8777,
+      "sha256": "6a83d2b6ee888061e37cd8f78e5494b31dd071355743b3b4ac5957a9d9ce7428"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-002.png",
+      "bytes": 8885,
+      "sha256": "069a4b47bc3465b4ba0311671dc2a201f75b36e04927f183975e75cf2f108a6b"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-003.png",
+      "bytes": 15179,
+      "sha256": "3b90b2d0cdd9d425d97889273263e2884a8d22102a492df5a8bfe99536b7d96f"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-004.png",
+      "bytes": 31383,
+      "sha256": "41fd06adfa543d3e548008bada6bed6d51363ebe044277cea6a2d1cf03f150b9"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-005.png",
+      "bytes": 33137,
+      "sha256": "10c360b003dde87af056bbdb9c2af1e7a46c2a4a5d84850f46a5af12822898c6"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-006.png",
+      "bytes": 34588,
+      "sha256": "7a8159b94b0df948524dfc7ff554ec5b167b8bb9958b1acd3f4ee7f90b9abf8e"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-007.png",
+      "bytes": 36494,
+      "sha256": "28642cab3ef1c40f48da5393969a998fb615c034ad16b9a0bae589b8b961b1b2"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-008.png",
+      "bytes": 38483,
+      "sha256": "d6751795d3ce4c300f984105d8f1b767dcf9f234220000e491a8b41bfda5e469"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-009.png",
+      "bytes": 39801,
+      "sha256": "c1eb95eb22995fb47f9c62c80ec1cb501c7956a68f1f108a46c96b422a778128"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-010.png",
+      "bytes": 43700,
+      "sha256": "e53f2d9c8e26155c46125635feb0253ec0b851ef41d3a1c8db0d14ea48bec039"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-011.png",
+      "bytes": 45070,
+      "sha256": "c0a7c25e6821ef7d297355593c9c318cb1e6e78ff92dafaee671ae0af828b044"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-012.png",
+      "bytes": 50069,
+      "sha256": "9d31939d1af9d94fa5adaf065b330d5200f216b9d7f251bea986b06f79688d1c"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-013.png",
+      "bytes": 50705,
+      "sha256": "99c402ea3b10a88b6139813e4d9329050af780f2c7fb37d77f6e967b4f01cfdf"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-014.png",
+      "bytes": 55343,
+      "sha256": "55f55eea7dab8427fb0267f67900a6107eb50ec4d74ef97509f16c863341b24a"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-015.png",
+      "bytes": 57001,
+      "sha256": "cda77fe19788d1fb691e667a3088bf7fffb2bdbdce6d5f57a28eeaf61bc71e8e"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-016.png",
+      "bytes": 56489,
+      "sha256": "83a7eba29c36b147acdcc2d61c4a038af26634f51532cb613efc5bc39de1691b"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-017.png",
+      "bytes": 54496,
+      "sha256": "a265013eb652e26d1500624d577b7ca14f32f0959b51f46d6b62a6cdc218d458"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-018.png",
+      "bytes": 54453,
+      "sha256": "6cab588eb032b167a1bcfa90c5e4379df223eb450fcb52c9408cfd6c61317ba2"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-019.png",
+      "bytes": 51375,
+      "sha256": "07b43680dca4c727e402041b91f6998d377fa24989edc6dabda608b5cdc952c4"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-020.png",
+      "bytes": 50486,
+      "sha256": "d26e400d886c8ed3a54a30306301bc8aacf63098591e769dfa91022889b581b7"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-021.png",
+      "bytes": 49297,
+      "sha256": "8c63f1ddf05e3abe55a658eb8c4340f1a4ad755710e913187ee75ec42fa9bc4e"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-022.png",
+      "bytes": 48924,
+      "sha256": "a61f433ed6bbcc06cc86fd0c5cbff1e67f207a79ee13a05787c3ebff0c0e8ca5"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-023.png",
+      "bytes": 49160,
+      "sha256": "33c342dc29450d6874c40745c9ad466c5250183b9eee917cff16f15a43745720"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-024.png",
+      "bytes": 50377,
+      "sha256": "c019365a976ca7c902591800b41aa706ffb0f14a294cbf02cb00f1e3095d6680"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-025.png",
+      "bytes": 49494,
+      "sha256": "803faa4fcc81306034e012c8407819e8b6857c7774872417f9ce4e482f68196f"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-026.png",
+      "bytes": 49300,
+      "sha256": "3455c0f8089341d573326a4ffb5abd7eeaf6e1de1181a073bef1af9c5c34584d"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-027.png",
+      "bytes": 47789,
+      "sha256": "d28ce667171ce94dc3987544d6a4df7afbb09c988498c8340975c312f5d85533"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-028.png",
+      "bytes": 45380,
+      "sha256": "444dd9f32f33086b5625999732f894178215671a0c158ae3424ecfcc9626d07f"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-029.png",
+      "bytes": 45355,
+      "sha256": "b12f7c316b90b01a3ac3120a6e69510e47d1165124809f82850b3e22a5f6b733"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-030.png",
+      "bytes": 44045,
+      "sha256": "e74cd6944055a82d92a91ca2b38b7d3a97d450634b75d23cedc0789e06bd017d"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-031.png",
+      "bytes": 43570,
+      "sha256": "8e3f4141813f5f1861f6f87a6697f88b63edb606232d631045f9feed8a0b16ef"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-032.png",
+      "bytes": 42533,
+      "sha256": "8045d50d80426635f46a79796a0774cea64eb3803c4ea12a5de798798b4ca1b4"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-033.png",
+      "bytes": 42715,
+      "sha256": "a7a59e5d9c1a84d6b81309c8105dd2f6316b0320ef9841d11a86f7eb36003529"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-034.png",
+      "bytes": 41165,
+      "sha256": "8c2ebb7af576ef3e190374b50752e05a99a4bf2fac96bdcdc9cd07d3d1225295"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-035.png",
+      "bytes": 41074,
+      "sha256": "4343c957ddb63aa8b2f44195e02559affc3c4a0f49cae4b351f214569b77b5c3"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-036.png",
+      "bytes": 40882,
+      "sha256": "8cf145c7f96a1ebd07298e1a69e6f67375072a2d648c8bd9f1415333d1b8c851"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-037.png",
+      "bytes": 40968,
+      "sha256": "251f442dc31985fd3e265e202f084fb726d22f1fbae26c47a339209258f01cf7"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-038.png",
+      "bytes": 40826,
+      "sha256": "21c1d9f02184a5bb4a7c6498c0d02dfa03225efd8591efb72f5ec26ed399e9cb"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-039.png",
+      "bytes": 40686,
+      "sha256": "31ef2d79d2c83026c448cbe098cf30b983ecbf11c5dfd576c4ff6961b5002974"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-040.png",
+      "bytes": 40599,
+      "sha256": "bd23e6ddd265cd8599497ac3fb61e6864c0ce5cde39982cd0ca2824a3db91736"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-041.png",
+      "bytes": 40703,
+      "sha256": "fb54da81fbe97d5415a8cfbb2dcb117eadd1460b73d5d96cbbe7797012d16b22"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-042.png",
+      "bytes": 40715,
+      "sha256": "b6a47f52ebc3b19d3401da7ef8394773c1703151ab2a2878f9d3f0d8cac0f3b7"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-043.png",
+      "bytes": 40560,
+      "sha256": "96fd121b80b60467c9a9a7e9dbf9470d394dd03da438d0c87bb309dd70dedb31"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-044.png",
+      "bytes": 40600,
+      "sha256": "cb7f040da5e7ccafa37283df29b908eccb20dccd6a25c752fa14a1ad8c2a086f"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-045.png",
+      "bytes": 40516,
+      "sha256": "331d08695c09bf29ca555f9a7e44f2dba9b80b663d9488dc3aee60cff57f7216"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-046.png",
+      "bytes": 40598,
+      "sha256": "56084ad48d22be202e49a2e6a54ae876bc196fe685e9acdaefc42948cbacee85"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-047.png",
+      "bytes": 40538,
+      "sha256": "56582fc394f0797f9f7ddf5463973c119b180bd253656e1eedd7a2d6dc58cab1"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-048.png",
+      "bytes": 40498,
+      "sha256": "01c74fe9565d33fc5cce3645f0ecb1c4980a778dcf9959d6b81400cf8f7f4605"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-049.png",
+      "bytes": 40476,
+      "sha256": "6140f4b666ba625010586be06c54533185ed110492a465b06967edfef579d2ee"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-050.png",
+      "bytes": 40535,
+      "sha256": "40fb9120cb9cc99ff7502ae04c83793725ec547bf67cb8bf4a2746dcb8e038f6"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-051.png",
+      "bytes": 40484,
+      "sha256": "d70995f4709806019b01acb541fa50620cc152db40b74066c7ab73d138b295b2"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-052.png",
+      "bytes": 40500,
+      "sha256": "cdf6164e411e70ef3322cc195ec2a2748020586e8fb6801add3b8e4fb9c46442"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-053.png",
+      "bytes": 40489,
+      "sha256": "5f32af346872fe074ae080099dd427891577d0d6e5e6c38db9d65321f55da053"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-054.png",
+      "bytes": 40540,
+      "sha256": "717525b64764e2777ac5cf50e0d5498aa3a9c3d71d9755ae8f6e6ffb7ebe78c7"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-055.png",
+      "bytes": 40543,
+      "sha256": "b271deed76ea07ff8a01bfdc602b76f511048c7295aa0f6518cf97c06e1230ac"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-056.png",
+      "bytes": 40608,
+      "sha256": "22067626c270abb80f2f082d974d02a2108908c623d270b8cb0cb23edf69eb32"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-057.png",
+      "bytes": 40594,
+      "sha256": "72594a3e20f2e3a465217921e046cd412750c753d036644fd3fecb8cfa6f4d0e"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-058.png",
+      "bytes": 40623,
+      "sha256": "c2e5dc9c6f2155c5463f67c3932a5372163b945a4e13de36695050d25866fdad"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-059.png",
+      "bytes": 40565,
+      "sha256": "d4429590c0df81d44c05453e38b908a5a84d5571095a48d2560bdb29504bb35c"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-060.png",
+      "bytes": 40572,
+      "sha256": "a663fc5d1318819dd2f24e3ff731103697e0863dd264151a5b9d23c1db4ff4a9"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-061.png",
+      "bytes": 40528,
+      "sha256": "92db81a5fbf0c1f26141cb3d17c8632a7950f6cd9c540b31844b22dfbbdd44f9"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-062.png",
+      "bytes": 40605,
+      "sha256": "e700d45627d028cfbb7d5a81bc10f4bd2099f361c01b4b9c128315b70f6f4580"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-063.png",
+      "bytes": 40572,
+      "sha256": "c081e0e1012da6af401f06a9a54bdd97d775120d7f36ae5f8ec9cce002794dce"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-064.png",
+      "bytes": 40613,
+      "sha256": "5699d5f6422586362e5c4c16b500296dcf5de2d0b3d53f1c0cd29f01187eead8"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-065.png",
+      "bytes": 40579,
+      "sha256": "d68a57c554d8014739ea618c7822968fe751f6d6f5245f2ee781a3b064a13f3e"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-066.png",
+      "bytes": 40566,
+      "sha256": "d55fd30cb96b98807013599d1b4f86f8a0e2b19ac26ea6d4ac6dce897ca79de8"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-067.png",
+      "bytes": 40579,
+      "sha256": "3b1374214e996fa0d77f3878db000ed68dd6f6665c0f70231a387062ac9ca87d"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-068.png",
+      "bytes": 40549,
+      "sha256": "fe6799609e6c593efbe75a9a010a7442a30de0d33fc8d58496e97422f7aacdc7"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-069.png",
+      "bytes": 40570,
+      "sha256": "98540d63e8231ce5590b33e7407510e2c2adcb93b1244aa8d6bde618df00f05e"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-070.png",
+      "bytes": 40500,
+      "sha256": "18630437348e487bf2cbfb83dad7e247591b8f26713851733809bea54d110439"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-071.png",
+      "bytes": 40477,
+      "sha256": "1aff0ba9b97652a757435cc85571e6681b64c77b6655c9a58022ab3dcc40948e"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-072.png",
+      "bytes": 40508,
+      "sha256": "a2df756e028e3e52324faae5345c03ba277954da90ec10198e0e84acd0296569"
+    },
+    {
+      "file": "resources/kill1-3/kill1-3-073.png",
+      "bytes": 40446,
+      "sha256": "f30eda533ff7c5fa3827176d8ee392cbce278ac10f1a3b36e04c6e491ca72f74"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-000.png",
+      "bytes": 15711,
+      "sha256": "3b6943f8b58fc311e0d7f8e91ad441458029fee02a4ea20142a59278924e62f1"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-001.png",
+      "bytes": 9709,
+      "sha256": "ffd9436897161b069309e97d4f3b894b900ffe21fad132621394a0e5c75edd7d"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-002.png",
+      "bytes": 21170,
+      "sha256": "748713621abd136acdbdb4055ad3f9d88535ad3de541e4ca2bc8dabd3ef090ba"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-003.png",
+      "bytes": 34979,
+      "sha256": "c0e0aaea9cf395a44d202a1888867c2cab24c05dd41330929be17b3e00fb369a"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-004.png",
+      "bytes": 33703,
+      "sha256": "358a66b808aa7605305b3e320cdfa627f9ba6a5bd525d94867c2f83b06267e01"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-005.png",
+      "bytes": 35359,
+      "sha256": "b7247b013b9d5485ff76bd71598577a8305e87257936bd1a0c6cb5696b78aa1e"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-006.png",
+      "bytes": 37841,
+      "sha256": "0ebe422b2481e9695dda4202fcfab1035032817445498f951d1eb5ae23ea4ecf"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-007.png",
+      "bytes": 43795,
+      "sha256": "e01c81fbd52130cf52db76b3e7d8ffb65adaf11b11eac7ffd22bf5a5fda51e2c"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-008.png",
+      "bytes": 44561,
+      "sha256": "b533b92382cc7cba1677a5098fad36308653ca2cb58d1adaccd76765840e6ab0"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-009.png",
+      "bytes": 48188,
+      "sha256": "397e0284605dadde4cdde45fe37ebac50e4036c60ef9b440730d6f5d3ef50ca1"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-010.png",
+      "bytes": 49475,
+      "sha256": "47db9c6035c218390ee2f3f3b8dd8579274eafb711c8bdc350cd45182d269f5d"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-011.png",
+      "bytes": 49426,
+      "sha256": "9a2d5d4d4c9069cba796fe2b49850afa4e629ea9c4205964437759e0cb9ee2cc"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-012.png",
+      "bytes": 55674,
+      "sha256": "404afd21fec9c008da4e98df06893fd5ab8c6ab6d85d8795375f6204db5f1e3b"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-013.png",
+      "bytes": 58581,
+      "sha256": "e0381626f4ee27c6ef429547f85cdb894db4e5ef2d78faf0e4603cb97d89ac12"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-014.png",
+      "bytes": 63741,
+      "sha256": "9c8119af1b3f4440f75a948c5e08293b701244d48576285e1dc07f7e41b1c4f5"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-015.png",
+      "bytes": 64169,
+      "sha256": "a5aa773940687ff36f1a15a8cf61bd1b5621bfefcdc9e1b5642b817e3a39fefa"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-016.png",
+      "bytes": 65609,
+      "sha256": "b931a4da5316bc090cbfe5ab9ad3dff2ad6e30b02ac542eebc863db6699f1673"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-017.png",
+      "bytes": 63196,
+      "sha256": "ecc362d65d0ab0ef5306071c3bd83326f8ffd9db89ee794cd4fe88137d1c8760"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-018.png",
+      "bytes": 63416,
+      "sha256": "39a5d7251c6096e9c52d4233b92819185beea6cbeafc775d4fbbefdb6dc4760e"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-019.png",
+      "bytes": 62839,
+      "sha256": "506d73613a8e773d8335c9d45f8d1cf4f3e3e555a5d80a141d7b631d6913ff3f"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-020.png",
+      "bytes": 61662,
+      "sha256": "70ee759640b810ffde908c321e71fcc9abfe81f2d3b3b42c47b81ed737175270"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-021.png",
+      "bytes": 63622,
+      "sha256": "f2b1ceac3ab67aed860954db9816b40afee6ca47d66fea1e4f77236adeeef75a"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-022.png",
+      "bytes": 62472,
+      "sha256": "fddc6f363864e3e8ab78ce28eca3bfdaf823f3956d094df48d705628f9cf943a"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-023.png",
+      "bytes": 63083,
+      "sha256": "2ba00e40917a870b1e3b7840eaaade11c56b750ac5f606d1643febd926fe11ff"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-024.png",
+      "bytes": 58409,
+      "sha256": "229aff556a19221a1605e5b2ffae696999e694f8effcd2c03882c3e285d11c19"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-025.png",
+      "bytes": 56411,
+      "sha256": "453b7b880751fce77104653104746dde05e0dc375ebcdacd6d595e69ffd9e769"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-026.png",
+      "bytes": 55741,
+      "sha256": "df2a57b60013c118eead1e54c87478631d9fb354086730e7eb6fff6d931b43dd"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-027.png",
+      "bytes": 53167,
+      "sha256": "98ddc5182cf45c67f46b35788b28b9d8b71b928c15361fb4c6a40e22e8a00d3b"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-028.png",
+      "bytes": 52537,
+      "sha256": "e5a67fe0a8eed798c55ba5147a27ce39240c7a024ae48b3a6289ce8c9ac702ee"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-029.png",
+      "bytes": 48799,
+      "sha256": "ffaee8acff108df7d2e2c2a297f91ca3cf92ad009c5b06a14949893acdda0040"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-030.png",
+      "bytes": 48647,
+      "sha256": "ede6bbb2a2d45b3c5bcf2ecce5612e4e1463c36a3f1340f319c66992853d0ba0"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-031.png",
+      "bytes": 45570,
+      "sha256": "59ed8508eba51c2949eef4bc95ee96d21669bf198f4d0c91f9fd56ac1508f46b"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-032.png",
+      "bytes": 45647,
+      "sha256": "e210e3e896f7cccbf72c3a5cf3e7ffbc67166eb9a78af0a55ea5ed23693d6810"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-033.png",
+      "bytes": 44738,
+      "sha256": "853c5cbf9f18ca29fa60645a509b217f9b9ba0b4eb24448ebe95c836caa2c56a"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-034.png",
+      "bytes": 43162,
+      "sha256": "9907d6afc1530a6ef54e501b80afcbf4cb7a34d530b636256683c87af1208c15"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-035.png",
+      "bytes": 42927,
+      "sha256": "8ee46c57d81c322b1d874f1c15468dcb1fd0f9c1c3872be1031cf0a39e27fbb8"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-036.png",
+      "bytes": 43057,
+      "sha256": "5b91f9a3a3aaad2099c801cb02871f55d91c4094d362e5d5df33dc2678c5ed8a"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-037.png",
+      "bytes": 41303,
+      "sha256": "b50af308b558a39ae5ba3122158404b38e827b0d804e3cc757507088b4c739c8"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-038.png",
+      "bytes": 41264,
+      "sha256": "f7888d915a4384a7e379e2e17f9b3b7c6c20a201d25f294d587f5a9a548b74ab"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-039.png",
+      "bytes": 41283,
+      "sha256": "ea708cd398a57f3d4b56a14a9986dc83f53c2db689c320d788d1a8b11e7d41ba"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-040.png",
+      "bytes": 41399,
+      "sha256": "bb52ef5ef00634bb7bd38e33f30685a760ffb3940f1abb7e9c742cb9bf89d399"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-041.png",
+      "bytes": 41428,
+      "sha256": "9012b24bd12f2abf8c2c47e6eb13774987d837499626443f054000cd6d209461"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-042.png",
+      "bytes": 41386,
+      "sha256": "d1bec4c51a1cc62cc6d5b28b059368484f69a17dcae4616d2411fb44ed87ed82"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-043.png",
+      "bytes": 41491,
+      "sha256": "693470469a6e10a0a807636076efa972620237404798102336c87b2cdff160d2"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-044.png",
+      "bytes": 41240,
+      "sha256": "013e077e669b1b1da7522026752d2ca3832330a3b203bbde1292ed52018a2507"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-045.png",
+      "bytes": 41203,
+      "sha256": "8185bb86200eb6f8cbe2b03d961509bd50420ecafbfebc7f92ade42f94a80cd8"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-046.png",
+      "bytes": 40947,
+      "sha256": "9f50db96ecb3841d5a0b747fc128c4d2366c1a63eed2d8912fcb3488e16a976d"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-047.png",
+      "bytes": 40867,
+      "sha256": "98398cf2ea8b69fe07652895a6ab5aa3ea62a921a99c3e401797318bc7d3695f"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-048.png",
+      "bytes": 40839,
+      "sha256": "84cb240142b14ac8e4d299e38794d900edd76fdb889f62294b13806ebf116ac1"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-049.png",
+      "bytes": 40733,
+      "sha256": "4a310d78c5eb7c1ef31764d678de1454c9180bbd32130c0e3caa7195a6ccde25"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-050.png",
+      "bytes": 40637,
+      "sha256": "688392093dcb3be2d63d87c0ccf2fbb659d74df47507972fb5e61ca32ad7dc4a"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-051.png",
+      "bytes": 40655,
+      "sha256": "271367b40267788571c6dbac014373f179e9e563c87018eefd2311c29a3aaf77"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-052.png",
+      "bytes": 40770,
+      "sha256": "a5c87f7d4b48f8e3e4bed814e6a5b831c3d8def58dbdf0021823d14ea4d16db0"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-053.png",
+      "bytes": 40673,
+      "sha256": "caaaf1cf7565d0951b2f4fdfccd08c6e099afc4acb21b7c7db8fe26601312785"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-054.png",
+      "bytes": 40667,
+      "sha256": "2706577cb3660d06edb27269160666250cbb4326cd08d15b45a468548db936ae"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-055.png",
+      "bytes": 40603,
+      "sha256": "fb709795a8c25b22cbfecbd33eaadd754f8509e9fad28cb65b94bf6053cd45ef"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-056.png",
+      "bytes": 40676,
+      "sha256": "a12c098b8413156311ce69ad928568609f0b667eb56f204575787dde2ca97864"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-057.png",
+      "bytes": 40671,
+      "sha256": "1fc4fe063c57d602e94a25a727f72d2893545914d5add916baf6cf23578d2456"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-058.png",
+      "bytes": 40667,
+      "sha256": "a66df59731db6a0cddadf89632ec743811fb06ea219c7715907ef7d46c9266d2"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-059.png",
+      "bytes": 40660,
+      "sha256": "06e85428fff4d2c08ad6deba1f4615aab1b03fa37544243e314228e1c34d7b33"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-060.png",
+      "bytes": 40641,
+      "sha256": "fde95766b3de9a800257bebaada13d32e53f55ab656abcac308e209e0dcf9b7b"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-061.png",
+      "bytes": 40583,
+      "sha256": "2e537cad04f24571bed9e873084751325ee4caa920dbc33c2bb77b6d8079ffcc"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-062.png",
+      "bytes": 40623,
+      "sha256": "61c7b1d2c5f1cffa633a5d85469c4dd24d8b1dca06b1a5859516e54d653afb2e"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-063.png",
+      "bytes": 40529,
+      "sha256": "34ffd360442f30ae2fd93300482a4a2d996bdf291ad3850bd8699eef535a3efd"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-064.png",
+      "bytes": 40463,
+      "sha256": "ea7b7aa5acaa29c44a41587d369b1ecb7c3b130889a6e31857d77c122396cdc8"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-065.png",
+      "bytes": 40383,
+      "sha256": "1c64660ebb85e897c92eac1bdcb279add4f2cb463178ad2321f2d94ea55d786c"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-066.png",
+      "bytes": 40395,
+      "sha256": "19cac73c75d6089d30a8902495d86be40c7263aac59fec4315bf0595944b53bf"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-067.png",
+      "bytes": 40248,
+      "sha256": "edbcea5647a6adb7b7a41a1aa90e79a77f87397b67cd5238372c7a4ac984203d"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-068.png",
+      "bytes": 40241,
+      "sha256": "6df60529f131aa4badcbc0977d7fcba931550e6b5082ae33a9fc74686b51bd59"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-069.png",
+      "bytes": 40201,
+      "sha256": "3655d7ae48a8e1ff62a7932cfcfade9d97f901f9960ae5043cd221ec955b5e73"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-070.png",
+      "bytes": 40160,
+      "sha256": "684ee1bc353c16041975c30c8320a3b44cf5c992ce535831c255de725677a553"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-071.png",
+      "bytes": 40151,
+      "sha256": "9c40a9d54162d2505199100e946bbff8ac203677803e133680cd9ff5bc565615"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-072.png",
+      "bytes": 40091,
+      "sha256": "a7a8c8f31732bbcf452fa11a047a47c3d799ad12e48d01dcb53c1b7b7e0995e2"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-073.png",
+      "bytes": 40067,
+      "sha256": "bfb316530003a59708af5d3f05dfce3679b4ec772d428c8ed5fdc9e1165acf3c"
+    },
+    {
+      "file": "resources/kill1-4/kill1-4-074.png",
+      "bytes": 40094,
+      "sha256": "3685852f26f4b2e8418c28474adb27f70ff852f6c1359e671955a275ed3ccccf"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-000.png",
+      "bytes": 15171,
+      "sha256": "36b0088aa9d3a386a1b272e05af064f829867c2f8ddde2659eded3c8ded2475e"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-001.png",
+      "bytes": 6579,
+      "sha256": "cbf6dfb05be15088a57e1f6bd24a0f09642c80d3422e4f2590664b2d5237964d"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-002.png",
+      "bytes": 12940,
+      "sha256": "698875c859fa0d31abe0fdfce2c2c6a3ad7146204998da873036133dd65202a6"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-003.png",
+      "bytes": 20720,
+      "sha256": "aedf4eb16954222e096a24172ede71000b7bcc10eca0269b4e016dd3910950c9"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-004.png",
+      "bytes": 26690,
+      "sha256": "d340c7c36af1d9f0e4e76d48c34b004ba4ca85e8180311d6a337974e4a86e1b2"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-005.png",
+      "bytes": 28038,
+      "sha256": "7b826680cd9432643850ffa2b90721ec952f213fe5218a4bb4264c906251d1fb"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-006.png",
+      "bytes": 28705,
+      "sha256": "a1dac15a194d235890224477bc69a360374eb1bd6f6a2acce9927bc3dee3de46"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-007.png",
+      "bytes": 29051,
+      "sha256": "8dae151a437f9e0cd03b8b3b3c66c4bd00e6232964203d15595aa7f13ebde672"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-008.png",
+      "bytes": 29447,
+      "sha256": "3ce8127d323cb3c0b017acf332385c6e9914194d7d6fb6bc14a4ff84ea3ef04c"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-009.png",
+      "bytes": 31104,
+      "sha256": "38305a86c96de6845b0e19ac312367eba6bd050af988f9b8622dfa246863d609"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-010.png",
+      "bytes": 32133,
+      "sha256": "19cdd3167a9ac59d7baa2d4e09229abd4f1542bd1495724ae5f9f345068bb454"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-011.png",
+      "bytes": 34299,
+      "sha256": "7fd619558b39b925b6262c23669ec43caeae37b39bf8bb1591a13e64302fe52e"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-012.png",
+      "bytes": 38429,
+      "sha256": "8806b97551e0e01207d320dec2321c04130a99b3a9b4a19dfdf08839552a49bc"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-013.png",
+      "bytes": 39630,
+      "sha256": "29300243332acc216d8118b3677be33266acbd438ccacd869d2f5136554a48ea"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-014.png",
+      "bytes": 39972,
+      "sha256": "0d400cf2f4122a1cd854a889340884b471f913ea38edb916d495b12f7681e65f"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-015.png",
+      "bytes": 40432,
+      "sha256": "36a571c80de1e86ee055b6ef36f1b8ffa6f957f668e8b4b214bce41fd19693a4"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-016.png",
+      "bytes": 37567,
+      "sha256": "840684229e2336eeb0d8dbc6f828ae128e0c95e88c5b786a05daba4a6aa820b0"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-017.png",
+      "bytes": 41042,
+      "sha256": "9592c33885e5c16929d457aa8e7ae2dadf9a618331da5ed141627ef1a1e9856d"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-018.png",
+      "bytes": 42631,
+      "sha256": "5ecc040e29fee4d6296f7e4dd15a69796bc6ffa4db8fadfa2c4befaf4a9f88de"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-019.png",
+      "bytes": 48118,
+      "sha256": "1954f02c1e2acffa73e777e2087968f940c2e46c6fd831f859fdf5d900b37634"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-020.png",
+      "bytes": 54959,
+      "sha256": "bacdbb4fd4b2ff40a23a939c7581f7b9452380866b6eb518a0d938dfb4f8e617"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-021.png",
+      "bytes": 55050,
+      "sha256": "4eff16b53bfa97b990bb83e8d8ad3ad44cf12cdcf5f3d9297fbf6acd343a0047"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-022.png",
+      "bytes": 55086,
+      "sha256": "6373d0a5bc9efa2975b59f14ee1fa2a3d7a2d4b5cccef1534a6d5d44917a2c95"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-023.png",
+      "bytes": 71099,
+      "sha256": "104fef3806d6cd8c54fd39b858316f842b1c16ea9ba261c0fdb8cbdb90091457"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-024.png",
+      "bytes": 77209,
+      "sha256": "4ada69e699463e42bba89f8ab97cfdd049a68cdc9725e2da5949c6ba11fca673"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-025.png",
+      "bytes": 79127,
+      "sha256": "00acc4cf71a77fbc3c2840d05fde2ecf0800acbf11bc2398fb64d22eccc24b16"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-026.png",
+      "bytes": 83453,
+      "sha256": "54d03de94015c568a69ca5b5ed44e725642f1b388cab5e8b08911522f80710ae"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-027.png",
+      "bytes": 87043,
+      "sha256": "ab8f1dead63765ce24fe2fde822723d32d56ee082c2b9c19df3f83de915ff22d"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-028.png",
+      "bytes": 87344,
+      "sha256": "41f6b9f0ee21767663b72e831ba63b89834a8b843d07e86430516ae8674674aa"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-029.png",
+      "bytes": 86505,
+      "sha256": "e97b22a87ad39835e87182f31b81b3f2f99ed5790daa374dc0207ae09e02fd3e"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-030.png",
+      "bytes": 84767,
+      "sha256": "f10a8855ca71919d0e3640120aab2bde6f8049cd367e6f326619f2457fadecc3"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-031.png",
+      "bytes": 83778,
+      "sha256": "10a286ae122a7c369f5158fe287db453cef02e3852c810d83532f20d20385eb2"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-032.png",
+      "bytes": 86836,
+      "sha256": "1ea296d3f57c2e0ec703e70a2a9cf9b9e0ea5f03ad235fc809aacfcd83d0b86e"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-033.png",
+      "bytes": 86132,
+      "sha256": "f6be580b21688da030add3c643ee3ebd90c0abf43ca157364ab3eef9f801e4d3"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-034.png",
+      "bytes": 84150,
+      "sha256": "d09f482c1b5e05106cc8a9839c654f292772e3ed9bfa8e57715b7997387bdc0a"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-035.png",
+      "bytes": 82902,
+      "sha256": "69b61b91f5f51cfa6eca53320ad23950e1db7567c2a786570fcc3581c89b9b40"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-036.png",
+      "bytes": 83565,
+      "sha256": "334b248c2f898b2ef6fa329dcd29a1f92a2dd2289f2e45174e0b682f48e2ce02"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-037.png",
+      "bytes": 80791,
+      "sha256": "c6e0cbacb9456bb5aa0fb200cadef0fa80ea0bc8e5f879caf02bc5511c9a139a"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-038.png",
+      "bytes": 75461,
+      "sha256": "aef5222dafd4440ac4994b6f928ba586e016a20dd21d788e607be05c6fd14b84"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-039.png",
+      "bytes": 75523,
+      "sha256": "419453a62ac000d8fec24bf30270df4a38ae4645da3b7738e9affcc61d2791e2"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-040.png",
+      "bytes": 67575,
+      "sha256": "451817d0be5388271643614220842649ce14191e1a07da15ee013616848f320b"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-041.png",
+      "bytes": 65213,
+      "sha256": "4720ee820c22ab3a4cb9fcdbc43f048ea1633796838d3f9f689b59332ea74891"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-042.png",
+      "bytes": 61334,
+      "sha256": "dfed02bb6cf4a8e37cfcf58398058b6c285f8d2e404792039c06ee8324d4d515"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-043.png",
+      "bytes": 59360,
+      "sha256": "1fa9f03f90adb4cff53b87013914bce99cb9b24a1c6622fde41ad3cb89913baa"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-044.png",
+      "bytes": 59348,
+      "sha256": "f6ae4692d7dad1a4d9ba136a17f3ecdb0692fd86727892700d905cdab472b5da"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-045.png",
+      "bytes": 58591,
+      "sha256": "3f47b0aca728b6a521f2ea955803f5865a8e9338d454a0df446ceff9ddddb817"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-046.png",
+      "bytes": 54731,
+      "sha256": "3037ff5120b3a33cd51e0dc464c55a771d98781ae0833fb974bef7127477bebe"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-047.png",
+      "bytes": 52834,
+      "sha256": "83a9f7af99c73d2250f4bd05a3109c40b1bbcef6b0c38fd9ac7f5aa924723abf"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-048.png",
+      "bytes": 52687,
+      "sha256": "d32eb8fd559381166be1c842a111e512ab259520f04f6dd1659b9d79e2ce9103"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-049.png",
+      "bytes": 51829,
+      "sha256": "d346923098419c4487f412639f4b883262d05fb3fd36785afdcee561075721d5"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-050.png",
+      "bytes": 45138,
+      "sha256": "13fb5461c5f3fa053ab9d171d1a72821dcd2739fbb799ad9591ce96dcc86c851"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-051.png",
+      "bytes": 45009,
+      "sha256": "7aaef88ac803089f5d0c81af0c75e02e85a64040c72f1b6a6975232303643f05"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-052.png",
+      "bytes": 43049,
+      "sha256": "50c83a24d0930eb3b74357ed207217a7e7d316521d5fa98a57350fa54b932ee5"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-053.png",
+      "bytes": 43060,
+      "sha256": "16d66af1c27a74f671157d70e4a765d6df20ead5b953a743ad5dec3dcb17a01a"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-054.png",
+      "bytes": 43062,
+      "sha256": "bfd54b6d03f84b66281a95d466fb9bbe00de020bd5f2a31db76db651b8e46042"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-055.png",
+      "bytes": 43058,
+      "sha256": "a4a4c3b3c07f026d5eb1d3b8d7eb47dc4dec7d7d991170e0874c4b2c92bd0636"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-056.png",
+      "bytes": 43039,
+      "sha256": "cb0afdae18a191f85a21c5f9b100b0264804329c21ecbae827905c540180666d"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-057.png",
+      "bytes": 43035,
+      "sha256": "fc96c0d0d801c1dd106d10ddfb1d6644aeab26ebf7ad5ddee8899ec1f882e6b0"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-058.png",
+      "bytes": 43032,
+      "sha256": "ddcd0668e5e9dc6dda44f7c8e245309ba7d82c7842ac2d5479d171db2543a8f9"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-059.png",
+      "bytes": 43083,
+      "sha256": "7b278011cb267f9d8553569cc453305005698d851b415161840680d7a84cb8a8"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-060.png",
+      "bytes": 42936,
+      "sha256": "c4fb0c76eaedbc6d3d04b8ec7f83e8c4180f166a42cc63034bb47a600edf7356"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-061.png",
+      "bytes": 42884,
+      "sha256": "2dc6ce6a87e94cea236047130c47fd904ee211557c6c104d274464780903fe40"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-062.png",
+      "bytes": 42910,
+      "sha256": "6a17a76428ac8fff9f629a2a5f57dc8d6d96748cdb64154fcef55d9314d93e4d"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-063.png",
+      "bytes": 42943,
+      "sha256": "b4b79ccb6851a49a11eb9568c8c3876c542ea280741d34a97cd5c7cc5f7c2f21"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-064.png",
+      "bytes": 42942,
+      "sha256": "f753cc0f5ab42787b7e860fd764ed200e6c9a57845a9cf6b85ca38f7de40a976"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-065.png",
+      "bytes": 42944,
+      "sha256": "6d46e3b54926440577f1e2a2a011b0706b6467de250837fe2bb94772445f9c36"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-066.png",
+      "bytes": 42944,
+      "sha256": "6d46e3b54926440577f1e2a2a011b0706b6467de250837fe2bb94772445f9c36"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-067.png",
+      "bytes": 42944,
+      "sha256": "6d46e3b54926440577f1e2a2a011b0706b6467de250837fe2bb94772445f9c36"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-068.png",
+      "bytes": 42944,
+      "sha256": "6d46e3b54926440577f1e2a2a011b0706b6467de250837fe2bb94772445f9c36"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-069.png",
+      "bytes": 42985,
+      "sha256": "98be2b017aa002b255512c0fb6f1071196fd065a98ff4873b779f0b1c2572644"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-070.png",
+      "bytes": 42985,
+      "sha256": "98be2b017aa002b255512c0fb6f1071196fd065a98ff4873b779f0b1c2572644"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-071.png",
+      "bytes": 42985,
+      "sha256": "98be2b017aa002b255512c0fb6f1071196fd065a98ff4873b779f0b1c2572644"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-072.png",
+      "bytes": 42947,
+      "sha256": "06b89a44d9047b081cd46bc3dc5b3015bae12b7862c6016ffad5505411903fe7"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-073.png",
+      "bytes": 42962,
+      "sha256": "bc5e378a03606ea86fdf751615dbb00cadf1c4146ed7f76e41d1deec51c1b6d1"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-074.png",
+      "bytes": 42981,
+      "sha256": "b5b936073124acc268124c09542c26ab2e93b7a494ac3db513b5f508525d9454"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-075.png",
+      "bytes": 42947,
+      "sha256": "395c9be4a9022d03f5162613158484f786adc06aea8f13c07c1382d9e7a33813"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-076.png",
+      "bytes": 42988,
+      "sha256": "06a91db2b6fd5f482f1ba842249e9bd63b7b9a286bbf860378ab29d9510880e8"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-077.png",
+      "bytes": 43005,
+      "sha256": "91d8afa651a9fddfd0442d2933992fe6021eb4f3d1fefcc02958abcbdc1228e4"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-078.png",
+      "bytes": 43004,
+      "sha256": "1253837b54bd93afc3a6f98fe9285288f65fa7fe5603c6515b6dcd69c2ce923d"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-079.png",
+      "bytes": 43013,
+      "sha256": "9b86196cebdcd800fd95b7678cc4adcefbd071b1425109c52702c9883b1c1fd6"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-080.png",
+      "bytes": 43023,
+      "sha256": "20f312a7b475d3d2c61ec0abf4912b4ff5544f087e8ba3d6fbc6b3fb4ccea529"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-081.png",
+      "bytes": 43023,
+      "sha256": "20f312a7b475d3d2c61ec0abf4912b4ff5544f087e8ba3d6fbc6b3fb4ccea529"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-082.png",
+      "bytes": 43023,
+      "sha256": "20f312a7b475d3d2c61ec0abf4912b4ff5544f087e8ba3d6fbc6b3fb4ccea529"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-083.png",
+      "bytes": 43023,
+      "sha256": "20f312a7b475d3d2c61ec0abf4912b4ff5544f087e8ba3d6fbc6b3fb4ccea529"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-084.png",
+      "bytes": 43023,
+      "sha256": "20f312a7b475d3d2c61ec0abf4912b4ff5544f087e8ba3d6fbc6b3fb4ccea529"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-085.png",
+      "bytes": 43023,
+      "sha256": "20f312a7b475d3d2c61ec0abf4912b4ff5544f087e8ba3d6fbc6b3fb4ccea529"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-086.png",
+      "bytes": 43023,
+      "sha256": "20f312a7b475d3d2c61ec0abf4912b4ff5544f087e8ba3d6fbc6b3fb4ccea529"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-087.png",
+      "bytes": 43023,
+      "sha256": "20f312a7b475d3d2c61ec0abf4912b4ff5544f087e8ba3d6fbc6b3fb4ccea529"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-088.png",
+      "bytes": 43023,
+      "sha256": "20f312a7b475d3d2c61ec0abf4912b4ff5544f087e8ba3d6fbc6b3fb4ccea529"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-089.png",
+      "bytes": 43031,
+      "sha256": "57277cc0e51038aefc1e52c05aca27dd7d1c4db8934c0085990dc1ae28169326"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-090.png",
+      "bytes": 43042,
+      "sha256": "67dd6fcce64b3f8a322fe8667688ea236fada75b1cba04310b4cfa62145f786b"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-091.png",
+      "bytes": 43072,
+      "sha256": "b3836fdf4bf8aa9263bfcb26820849e266bf069b7a2ca2b25de6b56df4c889d6"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-092.png",
+      "bytes": 44756,
+      "sha256": "fb253fb4bf94c645a857fcd6c2cd5d13f784cb2b54fcfac2b072c6024ff4a539"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-093.png",
+      "bytes": 44747,
+      "sha256": "149e4eb7f641ca5cb2931a34cbe2cf2197c8c658e05e178cbe54f7c6169732cf"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-094.png",
+      "bytes": 40817,
+      "sha256": "56cfe4eec1ab4ce1ccfd967b6307845c425f8530b97f3eecbca70909b10c1002"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-095.png",
+      "bytes": 42395,
+      "sha256": "0207ece8b613c22e13678d1416c8a0c5c3741984711e8b437e586d68c4446f3f"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-096.png",
+      "bytes": 44189,
+      "sha256": "5cdba12853aa26f4a532832c88265d8f7a2735e110d3a67f6304102a780265c3"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-097.png",
+      "bytes": 44021,
+      "sha256": "816f72775d6043188870ad3b5ebe509792785cb280be193dc61a2135fe7d4744"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-098.png",
+      "bytes": 43980,
+      "sha256": "e41b5e1091c3bdeba4668685072abf0c566a4ed0190aae54977cc808e0a71f01"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-099.png",
+      "bytes": 43946,
+      "sha256": "cd6d092207d342f6403854f6ea5e0315c222ef2715589ba46159d6e19cdf8b01"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-100.png",
+      "bytes": 43206,
+      "sha256": "9f9d71b763e2032d1b5afd58d7022ae7354de6477846f6115c31e4b54cab7ca8"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-101.png",
+      "bytes": 44243,
+      "sha256": "c5b3e4ad96c423737eba3419a4a09d2ff5734b1e87a2f412dd8a6b9325e4f703"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-102.png",
+      "bytes": 43804,
+      "sha256": "d5f6d2fe89332ccbf5db22e5bf89985e6694553b2f1171358c7c61f3b734030d"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-103.png",
+      "bytes": 44522,
+      "sha256": "3cc06129efae0cf65d26a6ea1e0bde22f3128c185cdf91f2f038ff4085c4058f"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-104.png",
+      "bytes": 43230,
+      "sha256": "3f79d48fb803cafe1a05b48d181b2ccdb59c1c4ecd580f302dc38d36b278ffad"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-105.png",
+      "bytes": 44313,
+      "sha256": "8133c93376324b8e5b8ef8728b592c9b8e3181d6a1d9c18df714e580b6681dff"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-106.png",
+      "bytes": 43801,
+      "sha256": "060ac70093e6fc502a85b8203e0e3a3e3fba785665d7a23c8d210580d0c9e91c"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-107.png",
+      "bytes": 43646,
+      "sha256": "f37f5306936a28f0a79b436b92710ff7622efed9f4c3c3bfefa68624a5571990"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-108.png",
+      "bytes": 44009,
+      "sha256": "1af537f4b362a20820ae9a28697bc9b0ccb5d097de0551b729c591168cd86f40"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-109.png",
+      "bytes": 43547,
+      "sha256": "df6b6cf0942212aee2d94f4f83a6f147dc0af2c32204bea51ba12b4b9b30ded1"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-110.png",
+      "bytes": 43012,
+      "sha256": "64dc42be6da97ff34ad90432886381653921a625f3a7cf8cf0f6aab0f1dd3034"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-111.png",
+      "bytes": 44107,
+      "sha256": "803d324a5f65d0e57edabaf5ab474733021753b3c419a8d1072c9fafb5a85601"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-112.png",
+      "bytes": 43411,
+      "sha256": "1c00cb6a322df4bcadaa3cfd7b2887c5a00e0c4f5dee8a19c2ee8db520d00127"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-113.png",
+      "bytes": 43735,
+      "sha256": "39c6c6f930c98750210d94b0679852c827d571c3565316789f4223fa986ca347"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-114.png",
+      "bytes": 43054,
+      "sha256": "3549cd31da7164833692bd37f4a0954ccc98d276aa85fa5057efe890893a43c6"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-115.png",
+      "bytes": 43731,
+      "sha256": "33c2812a306ab42d5201792d81a04f8a4ca9c1e863d1168bd4689a8d817dd77e"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-116.png",
+      "bytes": 42808,
+      "sha256": "0e61d04e143cec8c97f55f8643f59cd4c332a744842eda8551f5b2606de3f491"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-117.png",
+      "bytes": 43031,
+      "sha256": "cdd39a5ee1b67c612092cbf534f6fa3dd581419136441809b4db0d08cbf3a4dc"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-118.png",
+      "bytes": 42782,
+      "sha256": "abf7f627c5925ed5afefd247721df2bc4c3544d506df30bdfabef147c076039f"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-119.png",
+      "bytes": 43662,
+      "sha256": "7e0cbe14f83d3f13fda8c8e445f1bc6d049c1e797d50c779dac27b6009e7fb13"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-120.png",
+      "bytes": 43569,
+      "sha256": "008d77a5317b13d380795717f3892b5efba91b13b76c32ff8022f9edcf8ee6b2"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-121.png",
+      "bytes": 43318,
+      "sha256": "caef58c8ae9f865370ac4711af8b73c02935a40f6e73397e83716372fae406dd"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-122.png",
+      "bytes": 43660,
+      "sha256": "09fabbffe1475f5c3834ef19f4503b9320edb3633ad68b735fff49ff2ddaa62b"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-123.png",
+      "bytes": 43823,
+      "sha256": "421e32c60424ab45ffc486ae88834de9d209895fe8f61dbd5f3cb78144e55922"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-124.png",
+      "bytes": 43613,
+      "sha256": "d5f7debdc64bd61619cb5fbd7258149fc413aac068e887c903ffca40fec7d46d"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-125.png",
+      "bytes": 43119,
+      "sha256": "3ede7c0e0c48d5975e07ae0529416dd4a397697b2110a839d208274fa6bf66cc"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-126.png",
+      "bytes": 42997,
+      "sha256": "1db05e4c8542c9eca85eddcf7afcc3bd102dd86f30ba575976a4fbd0ef4f2ff1"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-127.png",
+      "bytes": 42871,
+      "sha256": "3bf00320c3a760352ba3b2ee0edb9bb321b475ef47a34e058ddb91c2191e2f03"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-128.png",
+      "bytes": 43115,
+      "sha256": "0833be5a7fce162995d63ab8f615fc60db89b4165e3c9212b94c9b96c0e6d6d9"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-129.png",
+      "bytes": 43155,
+      "sha256": "86e2a47a35d710cf3ac1e3d62b9778e6e6084f464763895ce3ecf9d9df8f1fe7"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-130.png",
+      "bytes": 43353,
+      "sha256": "5c202d950b37f3150b9380f40d3e673fbff1eb1926d44d6cb66f2f878eccff07"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-131.png",
+      "bytes": 43191,
+      "sha256": "1e5d6fd0e8e02bbfbde64e68ed0dac9e71ea05e1cd51d557140ad7e005c68cb3"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-132.png",
+      "bytes": 43245,
+      "sha256": "1f26b666380238f6219921b781a3a0051050ef89bc3c1da630b777b76ed81280"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-133.png",
+      "bytes": 42936,
+      "sha256": "3252ae8d77322bb368acede78db04929ad8d3390b1c505166a52d0cb05064b58"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-134.png",
+      "bytes": 42635,
+      "sha256": "aec1e687129887606b2f05c21b474eab0447511a021009e86977115d82e18b1c"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-135.png",
+      "bytes": 42543,
+      "sha256": "bc6d077aa81e8098feb6480cfd86613ffef06c066029a1ba60cee1ce87be2bb8"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-136.png",
+      "bytes": 42712,
+      "sha256": "d9a258c5cedaf9534b335b89d1efcfffd5606733d1ef84ee04976adaadf62aa5"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-137.png",
+      "bytes": 42461,
+      "sha256": "2abbdc51b31263ed803da6987be4234545ab63f56b1f5f989a321380d0890feb"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-138.png",
+      "bytes": 43001,
+      "sha256": "29178b767664cc5dbd23c35ab069dc9297165cdf320ba546807438874ebea7a9"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-139.png",
+      "bytes": 42865,
+      "sha256": "13e115a055136514f1c2c4859fd63f32ad6d10b168cbff509aa562746540b9fa"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-140.png",
+      "bytes": 42812,
+      "sha256": "a4111f00d0cec7dc6e5c92b24bb62619d6106e707a244c65aef46c2108fd52fd"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-141.png",
+      "bytes": 42475,
+      "sha256": "d9a1a9bd81e4adcc740c495454fc47f506de72e8863ecde76ad594bbfde970c8"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-142.png",
+      "bytes": 42618,
+      "sha256": "9f2b94b402c5cc15688d9823ce63840b143435c1561632e92ea8ff031b742b61"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-143.png",
+      "bytes": 42538,
+      "sha256": "f01205d9adfb6b8f6004cba08fe86b31da3307f9064882325bd83124aac65575"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-144.png",
+      "bytes": 42462,
+      "sha256": "6b0bbb391bad128895a95e620b0a093eba4f394a7111f5078e01bec2e0535991"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-145.png",
+      "bytes": 42549,
+      "sha256": "ba08e0a6df789e92d16e8530d6d4caec2a09acb80359fc541b0b54de0399d320"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-146.png",
+      "bytes": 42538,
+      "sha256": "a69a720aa4b926f6fc01517fd9e3a0d0e74e4864dd31b1a0e0e862fb16e4b900"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-147.png",
+      "bytes": 42242,
+      "sha256": "83d3841802c98145aba276e5290374a30ce190f7d74eef503846b22ae82867e2"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-148.png",
+      "bytes": 42249,
+      "sha256": "52eed7ddfd4a39bfb038d479869bfcb92388df9e5c20b60a9e2af8871195b635"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-149.png",
+      "bytes": 42278,
+      "sha256": "41736e0e4d54f9c54ce4141153125036f7a0f38600b573365ccdd2e217d6d303"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-150.png",
+      "bytes": 42172,
+      "sha256": "5f25d9dd024a8e85b48e20919ec8db71dedd59fbdde6310196a9f73b42e13530"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-151.png",
+      "bytes": 42211,
+      "sha256": "7ea0554d0a364d8eaca4cd088ab104e8a5829ff6b5f65464820593e024ec9063"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-152.png",
+      "bytes": 42328,
+      "sha256": "5e574c77729fb15518e6b7e05eec8c99e091f301cfc6e743140eaa2cbd2c52bb"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-153.png",
+      "bytes": 42316,
+      "sha256": "a05928aad36cdb635cc5226c93f48d5632ffd126a2b8d55515a2323020017317"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-154.png",
+      "bytes": 42306,
+      "sha256": "1348bf983eee22bfc867bf38843d0ee74d26979141fd9d0a29793cce8db3f540"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-155.png",
+      "bytes": 42381,
+      "sha256": "a80edd62deea7b7d87b56ff3cb4affa4a80ac93390929a84c986633ac999b71b"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-156.png",
+      "bytes": 42396,
+      "sha256": "5502c9fe17ed9b11257311a739f59e75d14654f9569a05f239cdbab88308512a"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-157.png",
+      "bytes": 42503,
+      "sha256": "a6fbb4c60f93cabea8cd6a4ed1308b61dac752d36f366b9ba76569996d69a94b"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-158.png",
+      "bytes": 42558,
+      "sha256": "340b0e9595649cde380448b14e1d603c21d054950f604ded0b09c6d78603afe8"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-159.png",
+      "bytes": 42505,
+      "sha256": "2f3f5de6228b51c1b8c621503a4b92ced152c081467398f31675fdaa7413170d"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-160.png",
+      "bytes": 42231,
+      "sha256": "cc5616b202673358217e80a0d3e51d870fc5aeb69d57c04a93c35151fd3dc35d"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-161.png",
+      "bytes": 42544,
+      "sha256": "8933e6048867049a177980b89dc714d9aef7ce422744583addf2e53d72097345"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-162.png",
+      "bytes": 42498,
+      "sha256": "5c8d55e6fdd01000968e543f668028512b11165ec975e1f379141d9df54105d2"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-163.png",
+      "bytes": 42449,
+      "sha256": "0e8aefeb433c4d165831adbdaac53a01f5666d777cd849651905c10516864502"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-164.png",
+      "bytes": 42422,
+      "sha256": "274bf331957a4aa0b70045bf9bb3e6ce8ff4c4424ec0b8f926ef86af0c1b99af"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-165.png",
+      "bytes": 42471,
+      "sha256": "70a908128e62469484789b802d353973f81c5b41f3a3ff9fe955080c4327debc"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-166.png",
+      "bytes": 42417,
+      "sha256": "74e31b24396a8ea0ea98a262424bece44f975c84249b4a78c0e9c1931018b7f0"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-167.png",
+      "bytes": 42254,
+      "sha256": "f070fa797afa28323c69fd91fbefab7588e1d10d00065e564beb0000514c2baf"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-168.png",
+      "bytes": 42404,
+      "sha256": "0204a82a5a7eae271f3910ce9681470a700da44e6678eb9f2b91bb52f5d15ceb"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-169.png",
+      "bytes": 42412,
+      "sha256": "957989059431ac1f0455c7ecdc05e828caf1ea85b1171d534eb37a9cd1aa531d"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-170.png",
+      "bytes": 42300,
+      "sha256": "9c014af083b89854c94db36257cf72d4df769dab0845c96dd31f2c260b26bcca"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-171.png",
+      "bytes": 42341,
+      "sha256": "55bc603f3197b9cb9f6c864862d1ca3107f2c7f27735cb1fba64747b79844635"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-172.png",
+      "bytes": 42324,
+      "sha256": "66ae91c3c2b0198e0234d6f459f8388267e1aa8655260a59e71bd4783200d564"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-173.png",
+      "bytes": 42399,
+      "sha256": "c55c8e14a08784aaf90ece0a851b8f3ca3669dbabe3c918b9a575d227b075e61"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-174.png",
+      "bytes": 42662,
+      "sha256": "e3316c7b527b3b02391d508cc7f5d1fe445d4c2e90eaa93369377fae760430ea"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-175.png",
+      "bytes": 42663,
+      "sha256": "b220ef8153d4adb0fb6df027a485a9cfb06d15223bd7a6bac14d6239a3d9fae7"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-176.png",
+      "bytes": 42536,
+      "sha256": "fce576b99c89f2ae276aa86927afc2e6915cc34ec291d9952f22927cc4ead8a1"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-177.png",
+      "bytes": 42346,
+      "sha256": "d7418dd4ee285e87b93fae130ccd32c7643f7676ab7f6290bd16a55ee33fb6e7"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-178.png",
+      "bytes": 42378,
+      "sha256": "ae7c728b27a5daf91983ecea67a29e7d53fab3eca7da5c0015a00105cfe9b56b"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-179.png",
+      "bytes": 42500,
+      "sha256": "12f275bb81b62a4b09bf8bc61e7a98a75545f8d5202a7bd26d8f7f6bc8ef1a45"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-180.png",
+      "bytes": 42455,
+      "sha256": "f33980f69a7732b94582e29ba6bf530544e972017477ee17367668a0b09939c6"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-181.png",
+      "bytes": 42611,
+      "sha256": "581742e6d9dfe1210245ba4cd2bb7aa0abd22df00bbda53c128dd7ea3bc2f940"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-182.png",
+      "bytes": 42587,
+      "sha256": "325b8e7df75188fc9f774c1c1a14152a15c6d58c6f9469c28f456d12ca20b8e6"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-183.png",
+      "bytes": 42566,
+      "sha256": "db925f037ac74a40dd7c9abca695ebc87f1da2f5fdcfd5a6875988fa0ac3a566"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-184.png",
+      "bytes": 42618,
+      "sha256": "47af25565aa9631261b79c29701a27d4396e462f885da1d477be0a2cb70f6879"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-185.png",
+      "bytes": 42572,
+      "sha256": "461d827968dcfb8e797dd9f71f4fbea51494db2849ed794f03509a5a65d7b1e5"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-186.png",
+      "bytes": 42545,
+      "sha256": "c7f1f7bbeb9265cf41bfe645ce13314c290f3a4a6bcd048ff1238cbc27983c33"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-187.png",
+      "bytes": 42442,
+      "sha256": "a16e5ad09be804d3fd2c85fe81c1f3e5b257c47a9e961d9a31142c0986e012e0"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-188.png",
+      "bytes": 42491,
+      "sha256": "7c42cb8c6c1bc8bfff2393484f032c28725014f01ea384554ca54ec22e04b8fa"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-189.png",
+      "bytes": 42428,
+      "sha256": "c5e5a96ee76ef7f5f12864aa6408e8204f0eea3f2a77f638d6b46e90f51ca31a"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-190.png",
+      "bytes": 42649,
+      "sha256": "924a669a5fcb30c0a25aeba94f574c1362397b743fad525880bc111113258f96"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-191.png",
+      "bytes": 42394,
+      "sha256": "01f244a9e9b61d9a10ac0065ece3445ca7f2d7340f87741f0271162d772d4a7c"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-192.png",
+      "bytes": 42371,
+      "sha256": "b01177d040e161582f386b65515d03808a007517a7ba57ef50ed7b1700caf709"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-193.png",
+      "bytes": 42386,
+      "sha256": "3e9f7b58b15c92592b4f66e823f0d94e27d26d80bf2b4b1d7ae465d35fa1b275"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-194.png",
+      "bytes": 42355,
+      "sha256": "fdf504d21cdde8172aa20a111a347239e5cd78de191e69aba8e7ea8f9f16730e"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-195.png",
+      "bytes": 42427,
+      "sha256": "e5a12f5bed7da0f630ac3fc7c8431292bf6fd0264b91e0bea95142f44b2dc2ff"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-196.png",
+      "bytes": 42435,
+      "sha256": "373a5810d0935d8f5c17cf218cb76a13486c15bd55dfe6e8667b04efee96c1d4"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-197.png",
+      "bytes": 42381,
+      "sha256": "8d5b321ac16afc70861d65fa7074ccef3ce30fda350d1e5a46b3a44186286e86"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-198.png",
+      "bytes": 42417,
+      "sha256": "dba7adb31effc3a72661727a8cb5e1d5d5a62b317df902777f9eeb75157d6ef1"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-199.png",
+      "bytes": 42396,
+      "sha256": "b2d6f826e0f9e629a4bdd8bec3b910108e6a34f972ff0c5e204a849aa90b9d72"
+    },
+    {
+      "file": "resources/kill1-5/kill1-5-200.png",
+      "bytes": 42442,
+      "sha256": "648d09a7c1edf021a8a2bf60b7935380fb7237743bed7f6bf8a1765f07b64828"
+    }
+  ]
+}

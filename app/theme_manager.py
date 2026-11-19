@@ -1,0 +1,2814 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+"""
+主题管理系统
+提供统一的UI颜色方案和样式标准
+集成设计系统规范，确保所有组件遵循统一标准
+"""
+
+import os
+from dataclasses import dataclass
+from typing import Dict
+from core.utils.logger import get_logger
+from ui_design_system import get_design_system, qss_box
+
+logger = get_logger(__name__)
+
+# ============ QSS 图标资源 ============
+#
+# ⚠⚠ **QSS 的 `image: url(...)` 只认真实文件路径（和 Qt 资源路径），
+#     不认 `data:` URI。** 实测 `QPixmap.load("data:image/svg+xml;base64,...")`
+#     直接返回 False —— 写了不报错、不打日志，**只是那个图标永远不显示**。
+#
+# 这个坑本项目踩过两次，而且两次都藏了很久：
+#   · 复选框的对勾用 data URI 写的 → **所有已勾选的复选框都只是一个纯色方块**，
+#     看不出勾没勾（紫色方块很像"选中态"，所以一直没人觉得不对）；
+#   · 下拉箭头一度用"透明左右边框 + 实心上边框"这个 **Web CSS 三角形技巧**，
+#     Qt 不认，四条边照实心画 → 全应用 233 个下拉框右边都是**紫色实心小方块**。
+#
+# 正确姿势：用 QPainter 把图标画成 PNG 落到磁盘，QSS 里引用文件路径。
+# 颜色跟主题走，所以按 (名字, 颜色) 缓存，一个主题只生成一次。
+
+_ICON_CACHE: Dict[tuple, str] = {}
+
+def _icon_dir():
+    """图标缓存目录。跟配置同根，因此测试用 FANPAI_CONFIG_DIR 隔离时会一起隔离。"""
+    from config import get_config_dir      # 延迟导入，避免与 config 形成环
+
+    path = os.path.join(get_config_dir(), "qss_icons")
+    os.makedirs(path, exist_ok=True)
+    return path
+
+
+def _qss_icon(name: str, color: str, width: int, height: int, draw) -> str:
+    """生成（或复用）一张图标 PNG，返回 QSS 能直接用的路径；失败返回空串。
+
+    返回空串时调用方必须**整条 `image:` 都不要写**——写一个坏路径和写 data URI
+    一样是静默失效。宁可用 Qt 的默认外观，也不要一个永远不显示的图标。
+    """
+    key = (name, color, width, height)
+    if key in _ICON_CACHE:
+        return _ICON_CACHE[key]
+    try:
+        from PySide6.QtCore import Qt
+        from PySide6.QtGui import QColor, QImage, QPainter
+
+        scale = 3        # 超采样再由 QSS 缩回去，边缘才不毛糙
+        img = QImage(width * scale, height * scale, QImage.Format_ARGB32)
+        img.fill(Qt.transparent)
+        painter = QPainter(img)
+        painter.setRenderHint(QPainter.Antialiasing, True)
+        try:
+            draw(painter, QColor(color), width * scale, height * scale)
+        finally:
+            painter.end()
+
+        safe = color.lstrip("#").lower()
+        path = os.path.join(_icon_dir(), f"{name}_{safe}_{width}x{height}.png")
+        # QImage.save 失败只返回 False、不抛异常——必须显式判，否则会写出一条
+        # 指向不存在文件的 QSS，症状和 data URI 一模一样。
+        if not img.save(path, "PNG"):
+            logger.warning(f"QSS 图标写盘失败，改用默认外观: {path}")
+            _ICON_CACHE[key] = ""
+            return ""
+        # QSS 里的路径一律用正斜杠：反斜杠会被当转义
+        uri = path.replace("\\", "/")
+        _ICON_CACHE[key] = uri
+        return uri
+    except Exception as exc:
+        logger.warning(f"QSS 图标生成失败，改用默认外观: {exc}")
+        _ICON_CACHE[key] = ""
+        return ""
+
+
+def _draw_down_arrow(painter, color, w, h):
+    from PySide6.QtCore import QPointF
+    from PySide6.QtGui import QPainterPath
+
+    path = QPainterPath()
+    path.moveTo(QPointF(0, 0))
+    path.lineTo(QPointF(w, 0))
+    path.lineTo(QPointF(w / 2.0, h))
+    path.closeSubpath()
+    painter.fillPath(path, color)
+
+
+def _draw_check(painter, color, w, h):
+    from PySide6.QtCore import QPointF
+    from PySide6.QtGui import QPainterPath, QPen
+    from PySide6.QtCore import Qt
+
+    pen = QPen(color)
+    pen.setWidthF(max(1.6, w * 0.17))
+    pen.setCapStyle(Qt.RoundCap)
+    pen.setJoinStyle(Qt.RoundJoin)
+    painter.setPen(pen)
+    path = QPainterPath()
+    path.moveTo(QPointF(w * 0.20, h * 0.53))
+    path.lineTo(QPointF(w * 0.43, h * 0.75))
+    path.lineTo(QPointF(w * 0.80, h * 0.28))
+    painter.drawPath(path)
+
+
+@dataclass
+class ThemeColors:
+    """主题颜色定义"""
+    # 主背景色
+    bg_primary: str          # 主背景
+    bg_secondary: str        # 次要背景（卡片、侧边栏等）
+    bg_tertiary: str         # 第三背景（悬停、选中等）
+    bg_elevated: str         # 浮起元素背景
+
+    # 文字颜色
+    text_primary: str        # 主要文字
+    text_secondary: str      # 次要文字
+    text_tertiary: str       # 第三文字（提示文本等）
+    text_disabled: str       # 禁用文字
+
+    # 主题色
+    accent_primary: str      # 主题色（主要强调色）
+    accent_hover: str        # 主题色悬停
+    accent_pressed: str      # 主题色按下
+    # ⛔ RN-150：`accent_disabled`（主题色暗一档）已删除。
+    #    它全仓只有一处引用 —— `#primaryButton:disabled` 的背景，
+    #    而那一处正是缺陷本身：禁用的主按钮看着仍是「可以点的品牌色」。
+    #    ⭐ 改完之后它成了**没人用的字段**，而一个留着的死字段会让
+    #    下一个人以为「禁用态该用这个色」，然后又去调它（RN-001 那一族）。
+
+    # 边框颜色
+    border_primary: str      # 主要边框
+    border_secondary: str    # 次要边框
+    border_focus: str        # 聚焦边框
+
+    # 状态颜色
+    success: str             # 成功
+    warning: str             # 警告
+    error: str               # 错误
+    info: str                # 信息
+
+    # 功能颜色
+    scrollbar_bg: str        # 滚动条背景
+    # ⭐⭐ 2026-09-06 批 62：**焦点环用自己的 token，不许再借品牌色。**
+    #   在此之前 8 条 `:focus` 规则里有 5 条直接写 `accent_primary`，
+    #   而 `border_focus` 只被 `QTextEdit:focus` 一条用着。
+    #   借用的后果是：焦点环的对比度由**品牌色**决定，而品牌色是按
+    #   「主按钮底色 + 白字」调的（那是 §1.4.3 文字对比度），
+    #   跟「这圈线在页面底色上看不看得见」（§1.4.11）不是一件事 ——
+    #   实测 dark 2.95 / warm 2.57，两个主题的焦点环都不达标。
+    #   ⇒ 想让焦点环更明显就改 `border_focus`，不必动品牌色。
+    #   ⭐ 同 RN-232：**借来的东西会在出借方改变时跟着变，而没有人会因此变红。**
+    scrollbar_handle: str    # 滚动条滑块
+    scrollbar_hover: str     # 滚动条悬停
+
+    shadow: str              # 阴影颜色
+
+    # v5 新增（None 时由 Theme 在 __post_init__ 自动从既有色推导，
+    # 让旧主题定义不破坏；DarkTheme 等显式提供精调值）
+    bg_card: str | None = None          # 卡片背景（在 bg_secondary 上提亮一档）
+    bg_card_hover: str | None = None    # 卡片 hover 态
+    accent_secondary: str | None = None # 次要强调色（cyan 类）
+    accent_warm: str | None = None      # 暖色（琥珀，警告/提醒）
+
+    # R4（UP-021/UP-023）新增。两者都**默认自动推导**，不要求各主题手写——
+    # 手写 9 份必漏，且以后新增主题会静默不达标。要覆盖就显式给值。
+    text_muted: str | None = None       # 提示/辅助正文（hintLabel 等），保证 ≥4.5:1
+    text_on_primary: str | None = None  # 落在品牌色上的文字（primaryButton）
+    # R7 补 R4 的漏：禁用态**底色**是 bg_tertiary@90 叠在卡片上，而 text_disabled
+    # 是按"和常态文字能分辨"选的，压在那个底上只有 1.64~2.33:1（8/8 主题），
+    # 等于看不见。WCAG 豁免禁用控件不等于允许它消失。
+    text_on_disabled: str | None = None
+    # RN-640：控件**静止时**的边（hover/focus 仍走 border_primary/border_focus ≥3:1）。
+    # 默认自动推导，见 `Theme.resting_border()`；理由与数在 `ui_contrast_audit.EXEMPT_CONTROL_REASON`。
+    border_control: str | None = None
+
+
+class Theme:
+    """主题基类"""
+
+    def __init__(self, name: str, colors: ThemeColors):
+        self.name = name
+        self.colors = colors
+        self.logger = get_logger()
+        self.ds = get_design_system()  # 引入设计系统
+        # v5: 给未显式提供 v5 新字段的主题做兜底,从既有色推导
+        self._fill_v5_defaults(colors)
+
+    def _fill_v5_defaults(self, colors: "ThemeColors") -> None:
+        """v5 兜底:None 字段从既有色推导.让 DarkTheme 之外的主题不破坏."""
+        if colors.bg_card is None:
+            # 在 bg_secondary 之上提亮一档(亮度 +6%,饱和度略降)
+            colors.bg_card = self._lighten_color(colors.bg_secondary, factor=1.06)
+        if colors.bg_card_hover is None:
+            colors.bg_card_hover = self._lighten_color(colors.bg_card, factor=1.06)
+        if colors.accent_secondary is None:
+            # 默认与主色一致(无 dual accent),具体主题可显式覆盖
+            colors.accent_secondary = colors.accent_primary
+        if colors.accent_warm is None:
+            colors.accent_warm = colors.warning
+        self._fill_contrast_defaults(colors)
+
+    def _fill_contrast_defaults(self, colors: "ThemeColors") -> None:
+        """R4：按 WCAG 数学推导 text_muted / text_on_primary（UP-023 / UP-021）。
+
+        UP-023：`hintLabel` 原本直接吃 `text_tertiary`，9 个主题里 8 个只有
+        3.1~3.4:1，达不到 AA 正文的 4.5。按 D-15 只修对比度、**不动 12px 字号**。
+        提示文字会同时落在 bg_primary(侧栏/标签栏) / bg_secondary / bg_card 上，
+        所以取三者里最差的那个来收敛，只对其中一个达标等于没修。
+
+        UP-021：`primaryButton` 原本硬编码 `color: white`，而按钮底色是
+        `lighten(accent) → accent` 的渐变。墨绿/海洋/高对比/暖橙四个主题的品牌色
+        亮度高，白字被冲掉（实测 1.4~2.1:1）。这里对渐变**两个端点**分别算，
+        取黑白里"最差情况更好"的那个——单看一端会被渐变另一头打脸。
+        """
+        from core.utils.contrast import best_on_color, ensure_contrast
+
+        if colors.text_muted is None:
+            colors.text_muted = ensure_contrast(
+                colors.text_tertiary,
+                (colors.bg_primary, colors.bg_secondary, colors.bg_card),
+            )
+
+        if colors.text_on_primary is None:
+            # 由实底品牌色（渐变的主导端）决定黑字还是白字；渐变的浅端
+            # 随后由 _accent_gradient_top() 反过来向它收敛，不再让浅端说了算。
+            colors.text_on_primary = best_on_color(colors.accent_primary)
+
+        if colors.text_on_disabled is None:
+            # 禁用态的实际底色 = bg_tertiary 以 90/255 的 alpha 叠在卡片底上。
+            # 必须按**合成后**的底色收敛，按 bg_tertiary 本身算会偏。
+            # 目标 3:1 而不是 4.5——禁用控件本就该弱化，但不该消失；
+            # 3:1 是 WCAG 给大字/非文字的档，用作"看得清但明显次要"的下限。
+            disabled_bg = self._blend_hex(colors.bg_tertiary, 90, colors.bg_card)
+            colors.text_on_disabled = ensure_contrast(
+                colors.text_disabled, (disabled_bg,), 3.0)
+
+    def _accent_gradient_top(self, base: str | None = None) -> str:
+        """主按钮渐变的浅色端，且保证文字在**这一端**也达标（UP-021）。
+
+        主按钮底是 `lighten(accent) → accent` 的对角渐变，文字铺满整个按钮，
+        所以浅端就是最坏情况。深色主题实测：白字对浅端只有 **4.00:1**——
+        默认主题的保存按钮本身就不达标，光把 `color: white` 换成 token 修不掉。
+        这里把浅端往回压到刚好 4.5:1；压过头就干脆退成纯色（不要为了渐变
+        牺牲可读性），视觉上只是顶部略收一点亮度。
+        """
+        from core.utils.contrast import contrast_ratio, ensure_contrast, relative_luminance
+
+        c = self.colors
+        base = base or c.accent_primary
+        top = self._lighten_color(base)
+        fg = c.text_on_primary or "#ffffff"
+        if contrast_ratio(fg, top) >= 4.5:
+            return top
+        fixed = ensure_contrast(top, (fg,), 4.5)
+        # 判据必须看**亮度方向**而不是对比度：收敛后的浅端天然比实底对比度低，
+        # 拿对比度比大小会让每个主题都误判成"压过头"，把渐变整个压平。
+        # `_lighten_color` 保证 top 比 base 亮；若收敛后反而比 base 暗，
+        # 渐变就上下颠倒了，这时才退成纯色。
+        if relative_luminance(fixed) < relative_luminance(base):
+            return base
+        return fixed
+
+    def _primary_button_background(self, base: str | None = None) -> str:
+        """主按钮那块底 —— **全仓只有这一份**。
+
+        ⚠ 提出来不是为了短，是因为 RN-439 要在降权规则里把它**再写一次**
+        （「这颗按钮不归总开关管 ⇒ 保持原样」）。抄第二份的话，
+        哪天改了渐变，被豁免的那几颗就会悄悄留在旧配色上 ——
+        ⭐ **判据的输入有第二份副本时，它就不再是判据**（RN-198 那条的第四次现身）。
+        """
+        c = self.colors
+        base = base or c.accent_primary
+        return (f"qlineargradient(x1:0, y1:0, x2:1, y2:1, "
+                f"stop:0 {self._accent_gradient_top(base)}, stop:1 {base})")
+
+    def _danger_bg(self) -> str:
+        """危险按钮底色——压到文字能达标为止（暖橙/玫瑰主题白字只有 4.41:1）。
+
+        `c.error` 各主题亮度不一，黑白两种字色都够不到 4.5 时，只能动底色。
+        取黑白里更优的那个当目标，再把红色朝反方向推。
+        """
+        from core.utils.contrast import best_on_color, contrast_ratio, ensure_contrast
+
+        bg = self.colors.error
+        fg = best_on_color(bg)
+        if contrast_ratio(fg, bg) >= 4.5:
+            return bg
+        return ensure_contrast(bg, (fg,), 4.5)
+
+    def _lighten_color(self, hex_color, factor=1.2):
+        """HSV 空间亮化颜色（降低饱和度、提高明度），用于渐变起始色"""
+        from PySide6.QtGui import QColor
+        c = QColor(hex_color)
+        h, s, v, a = c.getHsv()
+        c.setHsv(h, max(0, int(s * 0.85)), min(255, int(v * factor)), a)
+        return c.name()
+
+    def _darken_color(self, hex_color, factor=0.8):
+        """HSV 空间暗化颜色（提高饱和度、降低明度），用于hover/pressed状态"""
+        from PySide6.QtGui import QColor
+        c = QColor(hex_color)
+        h, s, v, a = c.getHsv()
+        c.setHsv(h, min(255, int(s * 1.1)), max(0, int(v * factor)), a)
+        return c.name()
+
+    def _is_light_theme(self) -> bool:
+        """判断主题是浅色还是深色 — 基于 bg_primary 的 HSL 亮度."""
+        from PySide6.QtGui import QColor
+        return QColor(self.colors.bg_primary).lightnessF() > 0.65
+
+    def _chip_text(self, hex_color: str) -> str:
+        """状态徽章文字色 — 浅色主题下自动加深, 保证对比度.
+
+        修复 v2.1.1 浅色主题(浅色/暖橙/玫瑰/极简) 状态徽章 + 次级文字几乎不可读的问题:
+        原 QSS 直接用 accent_primary/accent_warm 作为徽章字色, 在浅色背景上对比度 < 3:1.
+        此处对浅色主题统一加深: 饱和度补强 + 明度降至 ~50%, 让徽章一眼可见.
+
+        R4(UP-023 同批)补充：原实现对深色主题**原样返回**，于是 chip 的红字
+        压在 `bg_card` 上只有 4.00~4.47:1，仍差一口气到 AA。现在两种主题都走
+        一次对比度收敛兜底——浅色主题保留原有的"加深"手法（观感已调好），
+        只在还不达标时再补推。
+        """
+        from core.utils.contrast import ensure_contrast
+
+        adjusted = hex_color
+        if self._is_light_theme():
+            from PySide6.QtGui import QColor
+            c = QColor(hex_color)
+            h, s, v, a = c.getHsv()
+            s_new = min(255, int(s * 1.15) + 30)
+            v_new = max(0, int(v * 0.50))
+            c.setHsv(h, s_new, v_new, a)
+            adjusted = c.name()
+        # chip 底色是 bg_card 上叠 28/255 的同色薄染，视觉上仍以 bg_card 为主，
+        # 按 bg_card 收敛即可（薄染会让实际对比只增不减）。
+        return ensure_contrast(adjusted, (self.colors.bg_card,))
+
+    def _accent_text_on(self, *bg_hex: str) -> str:
+        """accent 色**当文字用**时按底色收敛到 AA。
+
+        R8a 补 ghostButton 时量到：直接拿 `accent_primary` 当文字压在 `bg_elevated`
+        上，深色主题只有 2.50:1（暖橙 2.62、玫瑰 3.44、紫夜 3.64）—— 6/8 主题不过 AA。
+        既有的 `actionButton:hover` 正是这么写的，那是历史欠账（另记 UP-076）。
+
+        R8-W5 收口时把 `actionButton:hover` 也接上了这条收敛，于是本方法要能吃
+        **多个**底色：hover 底是 `bg_tertiary → bg_elevated` 的渐变，只按其中一端
+        收敛会在另一端翻车。传多个时 `ensure_contrast` 会对所有底色同时达标。
+        """
+        from core.utils.contrast import ensure_contrast
+
+        return ensure_contrast(self.colors.accent_primary, bg_hex)
+
+    @classmethod
+    def resting_border(cls, c) -> str:
+        """静态控件边框的合成色（RN-640）。唯一一处推导，样式表与对比度审计都问这里。"""
+        return c.border_control or cls._blend_hex(c.border_primary, 96, c.bg_card)
+
+    @staticmethod
+    def _blend_hex(fg: str, alpha: int, bg: str) -> str:
+        """把 fg 以 alpha(0-255) 叠在 bg 上，返回合成色。
+
+        QSS 里的 rgba() 底色最终会和它下面那层混合，算对比度必须用合成结果——
+        直接拿 rgba 的原色去算会得出偏乐观的数字。
+        """
+        from core.utils.contrast import parse_hex, to_hex
+
+        fr, fg_, fb = parse_hex(fg)
+        br, bg_, bb = parse_hex(bg)
+        k = max(0.0, min(1.0, alpha / 255.0))
+        return to_hex((fr * k + br * (1 - k), fg_ * k + bg_ * (1 - k), fb * k + bb * (1 - k)))
+
+    def _on_color(self, hex_color: str) -> str:
+        """落在指定底色上的文字色——黑白里取对比度高的那个。
+
+        用于品牌色/语义色之外的实底背景（如 dangerButton 的 `c.error`）。
+        品牌色走 `c.text_on_primary`（已按渐变两端算过，见 _fill_contrast_defaults）。
+        """
+        from core.utils.contrast import best_on_color
+        return best_on_color(hex_color)
+
+    def _hex_to_rgba(self, hex_color, alpha):
+        """将 hex 颜色转为 rgba() 字符串"""
+        from PySide6.QtGui import QColor
+        c = QColor(hex_color)
+        return f"rgba({c.red()}, {c.green()}, {c.blue()}, {alpha})"
+
+    def _master_switch_effect_qss(self) -> str:
+        """RN-407（批 16）：总开关关着时，整页停止假装已经生效。
+
+        ⭐ 单开一个方法是 UP-058 那条棘轮要求的（`generate_stylesheet` 判为不拆，
+        但**不许继续长**）—— 它在这一批当场把我拦下来了，1543 → 1590 行。
+
+        三段，对应三件事：
+
+        1. **参数卡降权**。⚠ 降权**不是禁用** —— RN-179 记过「188 个控件可点却
+           没反应」，那是另一条缺陷。这里只换颜色：控件照常可点、改了照常存，
+           旁边那条 `#masterOffNotice` 负责把「但现在不生效」说出来。
+           ⚠ 不走 `QGraphicsOpacityEffect`：卡片自己挂着 elevation 阴影，
+           一个控件只能挂一个 effect，换上去就把阴影顶掉并析构
+           （`gui_widget.py:4633` 的搜索高亮、`ui_transitions.py:7` 的转场各记过一次）。
+           ⚠ 这一段必须排在 `[semantic]` **之后**：特异度相同，后来者胜。
+           ⭐ 字色用 `text_secondary` —— 它已经被
+           `test_theme_contrast.test_body_text_meets_aa` 盯着（9 主题 ×3 背景全部
+           ≥4.5:1）。随手另调一个灰就绕开了那条守卫，而
+           「改了配色一定要重算对比度」是拿官网那轮换来的。
+           ⚠ **左侧那条竖杠不能用 `border_secondary`**：实测（批 16 出图肉眼看）
+           深色主题下它是 `#1f212c`，压在 `#1a1d27` 的卡上**一个像素都看不出来**，
+           整条降权在图上等于没发生。⭐ 又一次「一个没渲染出来的效果」——
+           **改完必须出图看一眼，判据绿不代表屏幕上有东西**。
+           ⚠ 也不能靠**换卡片底色**：`light` 主题的 `bg_card` 和 `bg_secondary`
+           都是 `#ffffff`、`contrast` 主题只差一档 —— ⭐ 一个在两个主题里
+           **数学上等于零**的视觉通道，不算通道。
+           ⇒ 只走**字色 + 竖杠**，两者在九个主题里都拉得开。
+
+        2. **那句话**。它是一个 `QLabel`（`QLabel` 自己会画 stylesheet 背景；
+           ⚠ **`QWidget` 子类不会** —— 批 14 的候选 B 就废在这儿，底色一个像素
+           都没渲染出来，⭐ 一个没渲染出来的候选，拿去比就是在比两张一样的图）。
+           配色沿用 `audioStatusChip[level="warning"]` 那一套（薄染 + 左侧色条），
+           字色走 `_chip_text()`，与 `test_status_chip_text_meets_aa` 同一条守卫。
+
+        3. **预览旁边那句话**。开着是中性说明，关着跳成警示色 ——
+           颜色要携带「现在到底生不生效」这个信息（官网那轮记过：
+           **按品牌着色而不按状态着色，等于颜色不说话**）。
+        """
+        c = self.colors
+        radius = self.ds.radius
+        font = self.ds.font_size
+        # 降权用的中性色。⚠ 主按钮上的字要跟着它走，不能留着原来那套。
+        # ⚠ 实测（批 16）：光取黑白里较好的那一端还不够 —— 墨绿主题 4.37:1、
+        #   玫瑰 4.45:1，两个都**差一口气到 AA**。⭐ 「改了配色一定要重算对比度」
+        #   这条每一次都会逮到一个我以为没问题的组合。
+        # （`idle` 自己压在卡片底上最差 3.09:1 —— 它是**非文字 UI 元件**
+        #   （滑块填充、单选框圈），WCAG 那一档的下限就是 3:1。）
+        from core.utils.contrast import AA_NORMAL, ensure_contrast
+
+        # RN-439：豁免属性的名字从**声明它的那个模块**取，不在这儿写第二份字面量。
+        from widgets import master_switch_effect as eff
+
+        idle = c.text_tertiary
+        idle_text = ensure_contrast(self._on_color(idle), (idle,), AA_NORMAL)
+        return f"""
+            QFrame#card[masterOff="true"] {{
+                border-left: 3px solid {c.bg_card};  /* RN-643：用户实机指着这根灰条说「白色条条去掉」 */
+            }}
+            QFrame#card[masterOff="true"] QLabel#cardTitle {{
+                color: {c.text_secondary};
+            }}
+
+            /* ⚠⚠ **第一版只降了卡片的「壳」（标题字色 + 左侧竖杠），外审复跑当场
+             *   证明那是降错了地方**：43 发里 39 发照旧报
+             *   「所有控件均为高亮紫色激活态且未置灰 ⇒ 以为功能正在运行」。
+             * ⭐⭐ **「这一片是活的」这个信号不是卡片外壳发出来的，是那些强调色
+             *   控件发出来的** —— 滑块的紫色填充、单选框的紫圈、主按钮。
+             *   我把外壳调暗了，而说话的那个东西一个像素没动。
+             * ⇒ 关着的时候，卡片里所有带**品牌强调色**的控件一律退成中性灰。
+             * ⚠ 只换颜色，**不动 `:disabled`**：控件照常可点、照常保存
+             *   （RN-179：可点却没反应是另一条缺陷，两条都不要），
+             *   开关行旁边那句「照常可调、改了会保存」负责把这件事说出来。 */
+            QFrame#card[masterOff="true"] QSlider::sub-page:horizontal,
+            QFrame#card[masterOff="true"] QSlider::sub-page:vertical {{
+                background: {idle};
+            }}
+            QFrame#card[masterOff="true"] QSlider::handle:horizontal,
+            QFrame#card[masterOff="true"] QSlider::handle:vertical {{
+                background: {idle};
+                border: 1px solid {c.border_secondary};
+            }}
+            QFrame#card[masterOff="true"] QRadioButton::indicator {{
+                border-color: {idle};
+            }}
+            QFrame#card[masterOff="true"] QRadioButton::indicator:checked {{
+                border-color: {idle};
+            }}
+            QFrame#card[masterOff="true"] QCheckBox::indicator:checked {{
+                background: {idle};
+                border-color: {idle};
+            }}
+            QFrame#card[masterOff="true"] QPushButton#primaryButton {{
+                background: {idle};
+                color: {idle_text};
+            }}
+
+            /* ⚠⚠ RN-439：上面那条按**控件的 objectName** 施加降权，
+             * 而该不该降权取决于**这颗按钮干什么**。实测（15 页 101 颗按钮）
+             * 两态会变的 9 颗里 **7 颗是错的** —— 全是空库时唯一走得通的
+             * 「去（社区）拿一套 X」，它开的是浏览器，跟总开关毫无关系。
+             * 而空库 + 总开关关，正是**全新用户的定义**：
+             * ⭐⭐⭐ 两条各自正确的规则（批 2/3 铺引导、批 16~20 铺降权）
+             *   在交集处出错，而必然踩进那个交集的，正好是这条引导唯一服务的那个人。
+             *
+             * ⭐ 判别标准这个文件里早就写着 —— 下面 RN-427 那组的注释：
+             *   「紫色主按钮编码的是『这是主要动作』，不是『这件事正在发生』」。
+             *   它只被应用到了两组选择器里的一组。
+             *
+             * ⚠ 位置必须在 `:disabled` 那条**之前**：两条特异度相同（2 个 id +
+             *   2 个属性/伪类），Qt 按**后来者胜**，禁用态才不会被这条豁免顶掉。
+             *   ⭐ 一条靠"排在谁前面"生效的规则，挪一次位置就会静默失效 ——
+             *     所以判据里有一条专门盯"禁用的豁免按钮仍然看得出禁用"。*/
+            QFrame#card[masterOff="true"]
+            QPushButton#primaryButton[{eff.UNGOVERNED_PROPERTY}="true"] {{
+                background: {self._primary_button_background()};
+                color: {c.text_on_primary};
+            }}
+
+            /* ⚠⚠ RN-150：上面那条的**特异度压过了 `#primaryButton:disabled`**
+             * （多一个 id + 一个属性），于是在降权的卡片里，
+             * 一颗**禁用**的主按钮和一颗**可点**的主按钮长得一模一样 ——
+             * 玩家分不出「这按钮点不了」和「整页降权了」。
+             * 实测：`kill_sound` 空库引导那颗「去社区拿一套…」，
+             * 启用/禁用两态**整块像素逐字节相同**。
+             *
+             * ⭐⭐ 这是批 16~20 那五批降权留下的**背面代价** ——
+             *   而逮到它的是我这一批为「防止自己改过头」加的那条守卫判据。
+             *   ⭐ **一条为防止自己改过头而加的守卫，逮到的是别人早就埋下的东西。**
+             *
+             * ⇒ 补一条特异度更高的（多一个伪类），让禁用态重新说得上话。 */
+            QFrame#card[masterOff="true"] QPushButton#primaryButton:disabled {{
+                background: {self._hex_to_rgba(c.bg_tertiary, 90)};
+                color: {c.text_on_disabled};
+            }}
+
+            /* ⚠⚠ RN-427（批 19）：上面那组选择器全都要求控件**住在一张 card 里**，
+             * 而 `music` 的「允许游戏状态自动控制音乐」和 `voice_output` 的三颗
+             * 转发复选框住在 **`QGroupBox`** 里 —— 一张卡都不沾，
+             * 于是降权**一个像素都没够着**（开/关两态逐像素完全相同），
+             * 而当时的判据问的是「每张卡有没有被降权」，15 页全绿。
+             * ⭐⭐⭐ **一个用容器类型当代理的分母，会漏掉所有没用那个容器的地方。**
+             * ⇒ 下面这组挂在**控件自己**的属性上，与它住在哪儿无关。
+             * ⚠ 只管**编码「当前值」**的那几类（打勾 / 单选 / 滑块）——
+             *   紫色主按钮编码的是「这是主要动作」，不是「这件事正在发生」。 */
+            QCheckBox[masterOff="true"]::indicator:checked {{
+                background: {idle};
+                border-color: {idle};
+            }}
+            QRadioButton[masterOff="true"]::indicator {{
+                border-color: {idle};
+            }}
+            QRadioButton[masterOff="true"]::indicator:checked {{
+                border-color: {idle};
+            }}
+            QSlider[masterOff="true"]::sub-page:horizontal,
+            QSlider[masterOff="true"]::sub-page:vertical {{
+                background: {idle};
+            }}
+            QSlider[masterOff="true"]::handle:horizontal,
+            QSlider[masterOff="true"]::handle:vertical {{
+                background: {idle};
+                border: 1px solid {c.border_secondary};
+            }}
+
+            /* 状态胶囊组：关着的时候它读起来像一张「当前正在运行的配置清单」。
+             * 外审 43 发里 16 发把那颗**橙色**的「未启用」读成了「运行中/已激活」
+             * 的高亮指示灯（深色主题下橙色 = 点亮，是 CS2 玩家的既有直觉）。
+             * ⭐ **按警示色着色而不按状态着色，颜色照样不携带信息。**
+             * ⇒ 总开关关着时整排胶囊退成中性 —— 「开没开」由它正上方那颗开关
+             *   和那句话来说，不由一排彩色标签来说。
+             * ⚠ 挂在**祖先**（状态卡）上而不是逐颗挂：那排胶囊自己会因为
+             *   level 变化反复 repolish，属性挂在它们身上会被洗掉。 */
+            QFrame#card[masterOffHost="true"] QLabel#audioStatusChip {{
+                color: {c.text_muted};
+                background-color: transparent;
+                /* RN-103（批 26）：这条原来会把闭合轮廓**加回来** ——
+                 * 它比 level 那几条特异度高，于是总开关关着的页面上，
+                 * 胶囊仍然是一个圆角空框。⇒ 跟着基础规则走，只留左侧色条。 */
+                border: none;   /* RN-643：连左侧色条一起去 */
+            }}
+
+            /* ⚠⚠ **这两处原来是橙色的，那是错的。**
+             * 外审第三轮 12 发以上同一条判词：
+             *   「橙黄色背景**误当成已激活的运行指示灯**」
+             *   「橙色提示条视觉上类似高亮状态条**而非阻断警告**」
+             * —— 和当初逼我把状态胶囊改成中性的**是同一条**：
+             * ⭐⭐⭐ **在这套深色界面里，任何一块饱和的色都读作「亮着 = 在运行」。**
+             *   于是「未启用」用橙色写，写得越醒目越像「已启用」。
+             * ⇒ 全站统一成一套：**中性 = 没在跑，品牌色 = 在跑**。
+             *   这一句、状态胶囊、参数控件因此在关着时是同一个调子，
+             *   整屏唯一还带颜色的就是那颗要去拨的开关。 */
+            QLabel#masterOffNotice {{
+                color: {c.text_secondary};
+                background-color: transparent;   /* RN-642：用户实机指着这块灰底说「奇怪」—— 一句话不该有自己的底色 */
+                border: none;
+                font-size: {font.sm}px;
+                padding: 2px 8px 2px 6px;
+            }}
+
+            /* RN-429 覆盖层的运行前提。⭐⭐ **它靠形状跳出来，不靠颜色。**
+             *
+             * 第一版就是一行普通文字，改完复跑 **32/33 发**说同一件事：
+             * 「关键前置条件**混在弱提示文本中**」「淹没在普通正文里」——
+             * 内容对了，层级不对。
+             *
+             * ⛔ 而第一直觉（染成橙色警示条）**在这套界面里是错的**：
+             *   上面那段刚写着「任何一块饱和的色都读作『亮着 = 在运行』」，
+             *   一条橙色的条会被读成"有什么东西亮着"，
+             *   直接撞坏批 16~20 用五批建起来的「中性 = 没在跑」。
+             *   ⭐ **一条修法的代价，长在它自己修好的那件事的背面。**
+             *
+             * ⇒ 提层级只用**形状**：整圈边框（不是只有左竖杠）+ 正文字号
+             *   （不缩到 sm）+ 加粗 + 独占一行的内外边距。
+             *   字色仍是 `text_secondary`（已被对比度判据盯着 ≥4.5:1）。
+             *
+             * ⚠ 这条与总开关**无关** —— 不管开没开它都成立，所以它
+             *   **不参与降权**。开关关着的时候玩家正在配，那恰恰是最需要它的时刻。 */
+            QLabel#overlayRequirementHint {{
+                color: {c.text_secondary};
+                background-color: {self._hex_to_rgba(c.text_tertiary, 22)};
+                border: 1px solid {self._hex_to_rgba(c.text_secondary, 90)};
+                border-radius: {radius.sm}px;
+                font-weight: 600;
+                padding: 7px 10px;
+                margin: 2px 0px;
+            }}
+
+            QLabel#previewEffectCaption {{
+                color: {c.text_secondary};
+                font-size: {font.sm}px;
+            }}
+"""
+
+    def _pending_button_qss(self, c) -> str:
+        """RN-504：没有待提交内容时提交按钮不再喊（只换色，几何不动）。
+
+        为什么、分母多大、为什么不是 `:disabled`、为什么排在 hover 之后 ——
+        全在 `tests/test_the_bottom_bar_stops_shouting.py` 的模块说明里。
+        ⭐ 单开一个方法是 `test_closed_items_ratchet_r11` 逐字要求的
+        （「新样式请开新方法，别再往这一坨里堆」）。
+        """
+        return f"""
+            QPushButton#primaryButton[fp_pending="false"] {{
+                background: {c.bg_tertiary};
+                color: {c.text_primary};
+            }}
+            QPushButton#primaryButton[fp_pending="false"]:hover {{
+                background: {c.bg_elevated};
+            }}
+"""
+
+    def _icon_button_qss(self, c, radius) -> str:
+        """两个"只有一个字符"的小方按钮：顶栏模式切换、页面标题旁的帮助「?」。
+
+        ⚠ **它们必须自带 `padding: 0` 和 min/max 尺寸，一条都不能省。**
+        通用 `QPushButton` 规则带着横向 `padding: ≥12px` 和 `min-height`，
+        而 QSS 属性是**逐条**生效的——只覆盖颜色不覆盖盒模型，就会出现
+        "按钮还在、字没了"：
+          · 帮助按钮 24px 宽扣掉两边 padding 直接是负数 → 「?」整个消失，
+            **23 个页面全中**，而其中 5 页的正文还写着「点右上角「?」看用法」；
+          · 模式切换按钮 38px 宽只剩 12px，而「⇔」要 16px → 同样消失。
+
+        ⚠ 另一半是尺寸：`setFixedSize()` 只压得住**最大**尺寸，QSS 的
+        `min-height` 会把最小尺寸顶上去，而 **Qt 在 min > max 时取 min**。
+        帮助按钮因此从 24×24 变成 24×42 的灰胶囊。所以 min/max 两头都要在
+        这儿写死，而且**Python 侧的 setFixedSize 必须等于这里算出来的最终值**：
+        QSS 的 min/max 说的是**内容盒**，边框要另加
+        （帮助按钮 24+1.5×2≈28，模式按钮 38+1×2=40，故 border-radius 取 14）。
+
+        ⚠ **尺寸约束只能挂在 `modeToggleIconButton` 上，不能挂 `modeToggleButton`。**
+        侧栏底部那个「紧凑模式 «」宽文字按钮**共用后者这个 objectName**，
+        我第一版把 `min-width: 38px` 写进共用选择器，直接把它压成一个 38px
+        方块、文字裁成「奏模式」—— 修完重跑截图才发现。共用 objectName 的控件
+        加盒模型约束前，先搜一遍还有谁在用。
+        """
+        return f"""
+            QPushButton#modeToggleButton, QPushButton#modeToggleIconButton {{
+                background-color: transparent;
+                color: {c.text_secondary};
+                border: 1px solid {self.resting_border(c)};  /* RN-545 立的边界，RN-640 放软 */
+                border-radius: {radius.md}px;
+                font-size: 16px;
+            }}
+            QPushButton#modeToggleIconButton {{
+                padding: 0px 10px;  /* RN-541：带文字了，宽度放开 */
+                min-width: 38px;
+                min-height: 38px; max-height: 38px;
+            }}
+            QPushButton#helpButton {{
+                background: transparent;
+                color: {c.accent_primary};
+                border: 1.5px solid {c.accent_primary};
+                border-radius: 14px;
+                font-size: 13px;
+                font-weight: 700;
+                padding: 0px;
+                min-width: 24px; max-width: 24px;
+                min-height: 24px; max-height: 24px;
+            }}
+            QPushButton#helpButton:hover {{
+                background: {c.accent_primary};
+                color: {c.text_on_primary};
+            }}
+        """
+
+    def _sidebar_scrollbar_qss(self, c) -> str:
+        """侧栏滚动条的把手（现在和通用那条同色，只是分开成一条规则）。
+
+        ⚠⚠ 2026-09-06 批 61（RN-045，**S2**）：这段原来写着「通用把手是
+        alpha 60/255，肉眼完全看不出这里能滚」，然后**只把侧栏这一处抬到
+        alpha 130**。⭐⭐⭐ 那次修改把病诊断对了，却**没有量修完之后的数**：
+        实测 130 只把深色主题从 1.06 抬到 1.16 —— 因为病根是**把手色本身
+        就和底色几乎同亮度**，不是它太透明。兑水兑得少一点，还是水。
+        ⇒ 本批把九个主题的 `scrollbar_handle` 全部沿亮度轴推过 **3 : 1**
+          （WCAG 2.1 §1.4.11 对非文本 UI 组件的门槛），并且**不再兑 alpha**
+          —— 兑了之后实际看到的颜色取决于它压在哪张底色上，而同一根滚动条
+          会压在 bg_primary / bg_secondary / bg_tertiary 三种底色上。
+        ⚠ 顺带记一笔：连**名字叫「高对比度」的那个主题**，原来也只有 1.97。
+        """
+        return f"""
+            QScrollArea#sidebarScroll QScrollBar::handle:vertical {{
+                background: {c.scrollbar_handle};
+            }}
+            QScrollArea#sidebarScroll QScrollBar::handle:vertical:hover {{
+                background: {c.scrollbar_hover};
+            }}
+        """
+
+    def generate_stylesheet(self) -> str:
+        """生成完整的QSS样式表"""
+        c = self.colors  # 简化引用
+        spacing = self.ds.spacing
+        radius = self.ds.radius
+        font = self.ds.font_size
+        height = self.ds.height
+        button = self.ds.button
+        input_spec = self.ds.input
+        toggle = self.ds.toggle
+        slider = self.ds.slider
+        container = self.ds.container
+        scrollbar = self.ds.scrollbar
+        tooltip = self.ds.tooltip
+        table = self.ds.table
+        list_spec = self.ds.list
+
+        # 导航按钮内边距：v2.2 起紧凑化 (10→7) 让一屏可见更多导航项
+        nav_padding_vertical = 7
+        nav_padding_horizontal = 15
+
+
+        focus_border_width = max(2, input_spec.text_border_width + 1)
+        focus_padding_horizontal = max(
+            0,
+            input_spec.text_padding_horizontal - (focus_border_width - input_spec.text_border_width),
+        )
+        focus_padding_vertical = max(
+            0,
+            input_spec.text_padding_vertical - (focus_border_width - input_spec.text_border_width),
+        )
+
+        combo_focus_border_width = max(2, input_spec.combobox_border_width + 1)
+        combo_focus_padding_horizontal = max(
+            0,
+            input_spec.combobox_padding_horizontal
+            - (combo_focus_border_width - input_spec.combobox_border_width),
+        )
+        combo_focus_padding_vertical = max(
+            0,
+            input_spec.combobox_padding_vertical
+            - (combo_focus_border_width - input_spec.combobox_border_width),
+        )
+        textarea_focus_padding = max(
+            0,
+            input_spec.textarea_padding - (focus_border_width - input_spec.textarea_border_width),
+        )
+
+        generic_button_padding_vertical = max(4, spacing.sm - 2)
+        generic_button_padding_horizontal = max(12, spacing.lg - 2)
+        spin_button_radius = max(3, radius.sm - 2)
+
+        # 下拉箭头与复选框对勾：都必须是**磁盘上的真文件**，理由见文件头
+        # `_qss_icon` 上面那段。拿不到路径时**整条 `image:` 都不写**。
+        arrow_icon = _qss_icon("down_arrow", c.accent_primary, 10, 6, _draw_down_arrow)
+        arrow_rule = f"image: url({arrow_icon});" if arrow_icon else ""
+        check_icon = _qss_icon("check", c.text_on_primary, 12, 12, _draw_check)
+        check_rule = f"image: url({check_icon});" if check_icon else ""
+        
+        return f"""
+            /* ========== 全局样式 ========== */
+            QMainWindow, QDialog {{
+                background-color: {c.bg_primary};
+                color: {c.text_primary};
+            }}
+
+            * {{
+                font-family: "Microsoft YaHei UI", "Segoe UI", Arial;
+                outline: none;
+            }}
+
+            /* ========== 通用背景规则(优先级最低) ========== */
+            /* 所有QWidget默认透明背景,继承父组件颜色 */
+            QWidget {{
+                background-color: transparent;
+            }}
+
+            /* ========== 内容区域样式(覆盖通用规则) ========== */
+            /* v4: 主内容区用极微弱的垂直渐变（顶部稍亮带紫调，底部深）— 制造深度感 */
+            QMainWindow::centralwidget,
+            QMainWindow > QWidget,
+            QStackedWidget,
+            QStackedWidget#contentArea,
+            QStackedWidget > QWidget,
+            QStackedWidget#contentArea > QWidget,
+            QWidget#rightShell,
+            QWidget#contentPage {{
+                background-color: {c.bg_primary} !important;
+            }}
+
+            /* 主内容容器加微妙的顶部渐变光感 */
+            QStackedWidget#contentArea {{
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 {self._hex_to_rgba(c.bg_tertiary, 80)},
+                    stop:0.4 {c.bg_primary},
+                    stop:1 {c.bg_primary}) !important;
+            }}
+            
+            /* ========== 通用页面容器样式 ========== */
+            QScrollArea {{
+                background-color: {c.bg_primary};
+                border: none;
+            }}
+            
+            QScrollArea > QWidget > QWidget {{
+                background-color: {c.bg_primary};
+            }}
+            
+            /* ========== 侧边栏样式 ========== */
+            QFrame#sidebar {{
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 {c.bg_secondary}, stop:1 {c.bg_tertiary});
+                border: none;
+            }}
+
+            QScrollArea#sidebarScroll {{
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 {c.bg_secondary}, stop:1 {c.bg_tertiary});
+                border: none;
+            }}
+
+            QScrollArea#sidebarScroll > QWidget > QWidget {{
+                background: transparent;
+            }}
+{self._sidebar_scrollbar_qss(c)}
+
+            QWidget#sidebarBrand {{
+                background: transparent;
+                border-bottom: 1px solid {self._hex_to_rgba(c.border_secondary, 160)};
+            }}
+
+            QLabel#sidebarTitleLabel {{
+                color: {c.text_primary};
+                font-size: {font.xxl}px;
+                font-weight: 700;
+                background: transparent;
+            }}
+
+            QLabel#sidebarVersionLabel {{
+                color: {c.text_muted};
+                font-size: {font.sm}px;
+                font-weight: 500;
+                background: transparent;
+            }}
+
+            QWidget#sidebarFooter {{
+                background: transparent;
+                border-top: 1px solid {self._hex_to_rgba(c.border_secondary, 150)};
+            }}
+            
+            /* ========== 导航按钮 ========== */
+            QPushButton#navButton {{
+                background-color: transparent;
+                color: {c.text_secondary};
+                border: none;
+                text-align: left;
+                padding: {nav_padding_vertical}px {nav_padding_horizontal}px;
+                font-size: {font.md}px;
+                border-radius: {radius.lg}px;
+            }}
+
+            QPushButton#navButton:hover {{
+                background-color: {c.bg_tertiary};
+                color: {c.text_primary};
+            }}
+
+            QPushButton#navButton:checked {{
+                background-color: {c.bg_elevated};
+                color: {c.accent_primary};
+                font-weight: 600;   /* RN-643：选中项只靠底色 + 字色，左侧那根紫条一并退场 */
+            }}
+
+            /* 导航分组头（可折叠）— v2.2 紧凑化 */
+            QPushButton#navGroupHeader {{
+                background-color: transparent;
+                color: {c.text_muted};
+                border: none;
+                text-align: left;
+                padding: {spacing.xs}px {spacing.sm + 2}px;
+                margin-top: {spacing.xs}px;
+                font-size: {font.xs}px;
+                font-weight: 700;
+                border-radius: {radius.sm}px;
+            }}
+
+            QPushButton#navGroupHeader:hover {{
+                color: {c.text_secondary};
+                background-color: transparent;
+            }}
+
+            /* ========== 紧凑模式 ========== */
+            QWidget#compactHeader {{
+                background-color: {self._hex_to_rgba(c.bg_secondary, 244)};
+                border-bottom: 1px solid {c.border_secondary};
+            }}
+
+            QPushButton#hamburgerButton {{
+                background-color: transparent;
+                color: {c.text_primary};
+                border: none;
+                border-radius: {radius.md}px;
+                font-size: 20px;
+            }}
+
+            QPushButton#hamburgerButton:hover {{
+                background-color: {c.bg_tertiary};
+            }}
+
+{self._icon_button_qss(c, radius)}
+
+            QPushButton#modeToggleButton:hover,
+            QPushButton#modeToggleIconButton:hover {{
+                background-color: {c.bg_tertiary};
+                color: {c.text_primary};
+                border-color: {c.border_primary};
+            }}
+
+            QLabel#compactTitle {{
+                color: {c.text_primary};
+                font-size: {font.xl}px;
+                font-weight: 700;
+                background: transparent;
+            }}
+
+            QLabel#overlayGroupHeader {{
+                color: {c.text_muted};
+                font-size: {font.xs}px;
+                background: transparent;
+            }}
+
+            QFrame#sidebarOverlay {{
+                background-color: {c.bg_secondary};
+                border-right: 1px solid {c.border_primary};
+            }}
+
+            /* ========== 帮助面板 ========== */
+            QFrame#helpCard {{
+                background-color: {self._hex_to_rgba(c.accent_primary, 15)};
+                border-radius: {radius.md}px;
+            }}
+            QLabel#helpCardTitle {{
+                color: {c.accent_primary};
+                background: transparent;
+            }}
+            QLabel#helpContent {{
+                color: {c.text_secondary};
+                font-size: 13px;
+                line-height: 1.6;
+                background: transparent;
+            }}
+            QScrollArea#helpScrollArea {{
+                background: transparent;
+                border: none;
+            }}
+            QScrollArea#helpScrollArea > QWidget > QWidget {{
+                background: transparent;
+            }}
+            QPushButton#helpCloseButton {{
+                background: transparent;
+                color: {c.text_muted};
+                border: none;
+                font-size: 16px;
+                font-weight: bold;
+            }}
+            QPushButton#helpCloseButton:hover {{
+                color: {c.text_primary};
+            }}
+
+            /* ========== 标签样式 ========== */
+            QLabel {{
+                color: {c.text_primary};
+                font-size: {font.md}px;
+                background: transparent;
+            }}
+            
+            /* v4: 启用开关标签用 text_primary（不抢眼），仅由 toggle 本体显示状态 */
+            QLabel#switchLabelOn {{
+                color: {c.text_primary};
+                font-weight: 500;
+                background: transparent;
+            }}
+
+            QLabel#switchLabelOff {{
+                color: {c.text_secondary};
+                background: transparent;
+            }}
+
+            /* v4: 标题层级清晰，全部用 text_primary，不再用 accent 作标题色 */
+            QLabel#titleLabel {{
+                color: {c.text_primary};
+                font-size: {font.h1}px;
+                font-weight: 600;
+                letter-spacing: -0.5px;
+                background: transparent;
+            }}
+
+            QLabel#subtitleLabel {{
+                color: {c.text_secondary};
+                font-size: {font.lg}px;
+                font-weight: 500;
+                background: transparent;
+            }}
+
+            /* 卡片标题：v4 改用 text_primary 而非 accent，配合左侧装饰承担"分组"语义 */
+            QLabel#cardTitle {{
+                color: {c.text_primary};
+                /* R7/D-02(UP-043): 走专用的 card_title 档(16px)。
+                 * 之前这里是 font.xl(18px)，而 SettingsCard 的标题走的是另一条路
+                 * (#statusLabel, 14px = 和正文同号，等于没有标题)。
+                 * 现在两条路合并到本选择器，阶梯变成 28 → 16 → 14 → 13 → 12。 */
+                font-size: {font.card_title}px;
+                font-weight: 600;
+                letter-spacing: -0.2px;
+                background: transparent;
+            }}
+
+            QLabel#sectionTitle {{
+                color: {c.text_primary};
+                font-size: {font.lg}px;
+                font-weight: 600;
+                background: transparent;
+            }}
+
+            /* UP-053: 只给**文字**限宽,不动内容区宽度。
+             * 实测 2200px 窗口下 hintLabel 单行拉到 1936px,远超舒适行长；
+             * 而 R7 量过「给内容区限宽」会让 4 个页面从 3 列掉到 2 列——
+             * 所以限的是这一个标签,卡片网格照旧铺满。 */
+            QLabel#hintLabel {{
+                color: {c.text_muted};
+                font-size: {font.xs}px;
+                background: transparent;
+                max-width: {container.hint_max_width}px;
+            }}
+
+            QLabel#pageLeadLabel {{
+                color: {c.text_secondary};
+                font-size: {font.sm}px;
+                font-weight: 400;
+                background: transparent;
+            }}
+
+            /* valueLabel 保留 accent，因为它表示"突出数值"语义 */
+            QLabel#valueLabel {{
+                color: {c.accent_primary};
+                font-size: {font.lg}px;
+                font-weight: 600;
+                background-color: transparent;
+            }}
+
+            QLabel#badgeLabel {{
+                color: {c.text_secondary};
+                font-size: {font.sm}px;
+                font-weight: 600;
+                padding: 4px 10px;
+                border-radius: 10px;
+                background-color: {self._hex_to_rgba(c.bg_elevated, 205)};
+                border: 1px solid {self._hex_to_rgba(c.border_primary, 150)};
+            }}
+
+            QLabel#badgeLabel[tone="info"] {{
+                color: {c.accent_primary};
+                background-color: {self._hex_to_rgba(c.accent_primary, 26)};
+                border: 1px solid {self._hex_to_rgba(c.accent_primary, 90)};
+            }}
+
+            QLabel#badgeLabel[tone="positive"] {{
+                color: {c.success};
+                background-color: {self._hex_to_rgba(c.success, 24)};
+                border: 1px solid {self._hex_to_rgba(c.success, 90)};
+            }}
+
+            QLabel#badgeLabel[tone="warning"] {{
+                color: {c.warning};
+                background-color: {self._hex_to_rgba(c.warning, 24)};
+                border: 1px solid {self._hex_to_rgba(c.warning, 90)};
+            }}
+
+            QLabel#badgeLabel[tone="danger"] {{
+                color: {c.error};
+                background-color: {self._hex_to_rgba(c.error, 24)};
+                border: 1px solid {self._hex_to_rgba(c.error, 90)};
+            }}
+            
+            QLabel#statusLabel {{
+                color: {c.text_secondary};
+                font-size: {font.md}px;
+                font-weight: 600;
+                background-color: transparent;
+            }}
+
+            /* ========== 音频状态胶囊 ========== */
+            QFrame#audioStatusBar {{
+                background-color: transparent;
+                border: none;
+                margin: 1px 0 3px 0;
+            }}
+
+            /* v5 Phase 6: audioStatusChip 去圣诞树效应
+             * 策略:正常态(success/info)统一灰底,只用文字色标记语义;
+             *      异常态(warning/danger)保持满色块,确保一眼可见. */
+            /* ⚠⚠ RN-103（批 26）：胶囊原来是**一个圆角空框**，而这套界面里
+             * `secondaryButton` 也正是一个圆角空框 —— 实测两者在像素上是同一种东西。
+             * ⭐⭐⭐ **它不可点，却长着这套界面里"可点"的那个形状。**
+             * ⇒ 改成「无闭合轮廓 + 左侧 3px 色条」（这套语言下面
+             *   `#masterOffNotice` 批 16 就在用，只是没铺到胶囊上）。
+             * 完整实测（全站分母、四个候选的票数、两条被数堵死的修法、
+             * 八主题对比度）全在判据里：
+             * `tests/test_status_chips_do_not_look_clickable.py`。 */
+            QLabel#audioStatusChip {{
+                color: {c.text_primary};
+                background-color: transparent;
+                border: none;   /* RN-643：色条去掉 —— 胶囊 = 纯文字（RN-103 候选 C，与 B 只差 1 票、在地板内） */
+                border-radius: 0px;
+                /* ⚠ 纵向内边距**保持 5px**（调研那版用的是 3px）。
+                 * 3px 会把单行胶囊从 38px 压到 34px，而
+                 * 「预设 · 平衡默认（推荐）」「模式 · 连杀增强（推荐）」这两颗**本来就换行**，
+                 * 于是它们 38px、同排其余 34px ⇒ RN-185 那条「同排徽章高度一致」当场判红。
+                 * ⭐⭐ 换行的那两颗一直在换行，**只是以前同排的比它高，看不出来** ——
+                 *   我把别人压矮，就等于把它们抬了出来。
+                 *   （批 24 记过它的镜像：我把文案改长 ⇒ 那一颗换行、比同排高一截。）
+                 * ⭐ **同排一致这类判据，改「其余那些」和改「那一个」是等价的破坏。**
+                 * ⇒ 横向照调研那版（10/9，给左侧色条让位），纵向不动。 */
+                padding: 5px 14px 5px 0px;   /* RN-643：没有色条了，靠右侧间距分隔 */
+                font-size: 12px;
+                font-weight: 500;
+                min-height: 28px;
+            }}
+
+            /* 成功/信息/positive: Phase1-1.5 进一步去圣诞树——
+             * 正常态完全中性（灰字灰边），语义色只留给 warn/danger，
+             * 让"有问题的 chip"成为整行唯一会跳色的东西。
+             * 对标修缮：浅色主题下中性边框加深一档，避免 chip "若隐若现"。 */
+            QLabel#audioStatusChip[level="success"],
+            QLabel#audioStatusChip[level="positive"],
+            QLabel#audioStatusChip[level="info"] {{
+                color: {c.text_secondary};
+            }}
+
+            /* 警告/错误：满色块拿掉之后，**颜色是它唯一的通道**，字色与色条同色。
+             * ⭐ `_chip_text()` 收敛的目标一直就是 `bg_card`，所以去掉薄染
+             *   不可能让文字更难读 —— 这一条前人已经防住了（见它自己的注释）。 */
+            QLabel#audioStatusChip[level="warn"],
+            QLabel#audioStatusChip[level="warning"] {{
+                color: {self._chip_text(c.accent_warm)};
+                font-weight: 600;
+            }}
+
+            /* UP-050: StatusChip 声明了 error / neutral 两个 level,但 QSS 里原本
+             * 只有 danger —— 于是"GSI・异常"这类 chip 静默掉回基础规则,
+             * 渲染成和正常态一模一样的中性灰,异常反而看不出来。补齐两态。 */
+            QLabel#audioStatusChip[level="neutral"] {{
+                color: {c.text_muted};
+            }}
+
+            QLabel#audioStatusChip[level="danger"],
+            QLabel#audioStatusChip[level="error"] {{
+                color: {self._chip_text(c.error)};
+                font-weight: 600;
+            }}
+            
+            /* RN-414（批 27）：准心预览框在「选了自定义但还没画」这一刻**就是入口**。
+             * ⭐ 用批 26 刚立下的那套形状语言：**闭合轮廓 = 可点** ——
+             *   所以给它描一圈和按钮同一个 token 的边，而**不用品牌色**
+             *   （批 22：这套深色界面里任何一块饱和的色都读作「亮着 = 在运行」）。
+             * ⚠ 只在 `clickable="true"` 时才有边：其余时候它必须长得不可点，
+             *   否则就退回成「看着能点却点不动」的那条缺陷本身。 */
+            QFrame#crosshairPreviewFrame[clickable="true"] {{
+                border: 1px solid {c.border_primary};
+                border-radius: {container.card_border_radius}px;
+            }}
+            QFrame#crosshairPreviewFrame[clickable="true"]:hover {{
+                background-color: {self._hex_to_rgba(c.text_tertiary, 28)};
+            }}
+
+            /* ========== 卡片/容器样式 ========== */
+            /* v5: bg_card 比 bg_secondary 提亮一档,让阴影对比看得见 */
+            QFrame#card {{
+                background-color: {c.bg_card};
+                border-radius: {container.card_border_radius}px;
+                border: {container.card_border_width}px solid {c.border_secondary};
+                /* R7/D-03(UP-044): 常态**不再有色条**。但这里绝不能留 transparent——
+                 * Qt 画圆角边框是描边(pen 居中)，透明描边会露出约 1.5px 的页面底色，
+                 * 28 页每张卡的左缘都会出现一道缝。染成和其余三边同色即可，
+                 * 观感是"左边缘略厚"而不是"有根条"。
+                 * 保住 3px 占位还有个硬理由：宽度改成 1px 时卡内子控件 x 会从 17 变 15，
+                 * warn/danger 色条出现/消失时内容会左右跳 2px。 */
+                border-left: 3px solid {c.bg_card};  /* RN-642：占位保留、颜色同底 —— 那根「略厚的左缘」用户实机看得见 */
+            }}
+
+            QFrame#card:hover {{
+                background-color: {c.bg_card_hover};
+                border-color: {c.border_secondary};  /* RN-642：hover 不再亮一圈框 */
+            }}
+
+            /* R7/D-03(UP-044): 语义色条只留 warn/danger，常态无色条。
+             * 实测依据：全仓 78 处 SettingsCard 调用里**只有 1 处**显式传过 semantic，
+             * 其余全走默认 "config" —— 也就是说今天每一张卡都挂着同一根紫条，
+             * 它没有在区分任何东西，只是装饰。
+             * 与 04 §三记录的 audioStatusChip「正常态统一中性灰、只让 warn/danger 跳色」
+             * 是同一套状态语言：色条留给真正需要注意的卡。
+             * VALID_SEMANTICS 六个值全部保留（它同时是 icon_role 推导表的 key，
+             * 删值会让历史调用点直接抛 ValueError），只是常态四个不再画条。
+             *
+             * ⚠ 这两条必须排在下面的 [searchHit] 之后：三者特异度完全相同
+             * （1 id + 1 属性 + 1 类型），QSS 同特异度后来者胜。排在前面的话，
+             * 搜索命中那 1.6 秒里 warn/danger 的橙/红条会被高亮的 border-color
+             * 简写刷成品牌紫，状态语言被临时抹掉。 */
+
+            /* R4/UP-024: 搜索跳转定位高亮。
+             * 原实现给目标装发光 QGraphicsDropShadowEffect，会把卡片自己的
+             * elevation 阴影顶掉并析构，1.6s 后置 None —— 阴影永久消失，
+             * 且组件里残留的悬垂指针让之后每次 hover 抛 RuntimeError。
+             * 改成纯 QSS 属性态：只换颜色不换边框宽度，所以不会引起重排；
+             * 强/弱两档由定时器切换，观感是渐隐但零动画开销。 */
+            QWidget[searchHit="true"] {{
+                background-color: {self._hex_to_rgba(c.accent_primary, 42)};
+                border-radius: {radius.md}px;
+            }}
+            QWidget[searchHit="fade"] {{
+                background-color: {self._hex_to_rgba(c.accent_primary, 18)};
+                border-radius: {radius.md}px;
+            }}
+            QFrame#card[searchHit="true"] {{
+                background-color: {self._hex_to_rgba(c.accent_primary, 42)};
+                border-color: {c.accent_primary};
+            }}
+            QFrame#card[searchHit="fade"] {{
+                background-color: {self._hex_to_rgba(c.accent_primary, 18)};
+                border-color: {self._hex_to_rgba(c.accent_primary, 120)};
+            }}
+
+            /* R7/D-03(UP-044): warn/danger 色条。**必须排在 [searchHit] 之后**——
+             * 三者特异度完全相同（1 id + 1 属性 + 1 类型），QSS 同特异度后来者胜。
+             * 排在前面的话，搜索命中的那 1.6 秒里 border-color 简写会把橙/红条
+             * 一起刷成品牌紫，状态语言被临时抹掉。 */
+            QFrame#card[semantic="warning"] {{
+                background-color: {self._blend_hex(c.accent_warm, 22, c.bg_card)};  /* RN-643：色条 → 薄染 */
+            }}
+            QFrame#card[semantic="danger"] {{
+                background-color: {self._blend_hex(c.error, 22, c.bg_card)};  /* RN-643 */
+            }}
+            {self._master_switch_effect_qss()}
+            QFrame#pageActionBar {{
+                background-color: {self._hex_to_rgba(c.bg_secondary, 252)};
+                border-top: 1px solid {c.border_secondary};
+                border-left: 1px solid {c.border_secondary};
+                border-right: 1px solid {c.border_secondary};
+                border-bottom: 0;
+                border-top-left-radius: {container.card_border_radius}px;
+                border-top-right-radius: {container.card_border_radius}px;
+            }}
+
+            QFrame#pageActionBar QLabel#hintLabel {{
+                color: {c.text_secondary};
+                font-size: {font.sm}px;
+                /* 动作条是横向单行状态位,限宽会让它换行、把常驻动作条顶高,
+                 * 所以要把上面那条 #hintLabel 的限宽解除掉。
+                 * ⚠ 必须写成一个**合法长度**:Qt QSS 的 max-width 不认 CSS 的
+                 * `none`,写 none 会让样式解析出错,实测会把 special_sound 两个
+                 * 页签顶出可视区 46px/39px——一个看不出来的写错值,后果落在
+                 * 完全无关的另一个页面上。 */
+                max-width: 16777215px;
+            }}
+            
+            QFrame#section {{
+                background-color: transparent;
+                border: none;
+                border-bottom: 1px solid {c.border_secondary};
+                padding-bottom: {spacing.md}px;
+                margin-bottom: {spacing.md}px;
+            }}
+            
+            QFrame#group {{
+                background-color: {c.bg_secondary};
+                border-radius: {container.groupbox_border_radius}px;
+                border: {container.groupbox_border_width}px solid {c.border_secondary};
+                padding: {container.groupbox_padding}px;
+            }}
+            
+            QFrame#infoBox {{
+                background-color: rgba(74, 158, 255, 0.1);
+                border-radius: {radius.md}px;
+                padding: {spacing.md}px {spacing.lg}px;
+            }}
+            
+            QFrame#warningBox {{
+                background-color: rgba(255, 193, 7, 0.1);
+                border-radius: {radius.md}px;
+                padding: {spacing.md}px {spacing.lg}px;
+            }}
+            
+            /* ========== 按钮样式 ========== */
+            QPushButton#primaryButton {{
+                background: {self._primary_button_background()};
+                color: {c.text_on_primary};
+                border: none;
+                border-radius: {button.primary_border_radius}px;
+                padding: {button.primary_padding_vertical}px {button.primary_padding_horizontal}px;
+                font-weight: 600;
+                font-size: {button.primary_font_size}px;
+                min-height: {qss_box(button.primary_height, button.primary_padding_vertical)}px;
+                min-width: {qss_box(button.primary_min_width, button.primary_padding_horizontal)}px;
+            }}
+            
+            QPushButton#primaryButton:hover {{
+                background: {self._primary_button_background(c.accent_hover)};
+            }}
+
+            QPushButton#primaryButton:pressed {{
+                background: {self._primary_button_background(c.accent_pressed)};
+            }}
+
+{self._pending_button_qss(c)}
+            /* v5 Phase 9: focus ring — 键盘 Tab 切换可见 */
+            QPushButton#primaryButton:focus {{
+                border: 2px solid {c.accent_secondary};
+                padding: {max(0, button.primary_padding_vertical - 2)}px {max(0, button.primary_padding_horizontal - 2)}px;
+            }}
+
+            /* RN-150：禁用的主按钮**退回中性**，不用「暗一档的品牌色」。
+             * 完整的实测数据与「为什么不是自己再调一个色」写在判据里：
+             * `tests/test_disabled_buttons_look_disabled.py`。
+             * ⚠ 这里复用 `#dangerButton:disabled`（R7/D-06）那套已验过对比度的组合。 */
+            QPushButton#primaryButton:disabled {{
+                background-color: {self._hex_to_rgba(c.bg_tertiary, 90)};
+                color: {c.text_on_disabled};
+            }}
+            
+            QPushButton#secondaryButton {{
+                background-color: {c.bg_elevated};  /* RN-640：次级按钮改软填充，不靠亮线立边界 */
+                color: {c.text_primary};
+                border: {button.secondary_border_width}px solid {self.resting_border(c)};
+                border-radius: {button.secondary_border_radius}px;
+                padding: {button.secondary_padding_vertical}px {button.secondary_padding_horizontal}px;
+                font-size: {button.secondary_font_size}px;
+                min-height: {qss_box(button.secondary_height, button.secondary_padding_vertical, button.secondary_border_width)}px;
+                min-width: {qss_box(button.primary_min_width, button.secondary_padding_horizontal, button.secondary_border_width)}px;
+            }}
+            
+            QPushButton#secondaryButton:hover {{
+                background-color: {c.bg_tertiary};
+                border-color: {c.accent_primary};
+            }}
+
+            QPushButton#secondaryButton:pressed {{
+                background-color: {c.bg_elevated};
+            }}
+
+            /* v5 Phase 9: focus ring */
+            QPushButton#primaryButton[fp_narrow="true"], QPushButton#secondaryButton[fp_narrow="true"], QPushButton#dangerButton[fp_narrow="true"], QPushButton#actionButton[fp_narrow="true"], QPushButton#helpCloseButton[fp_narrow="true"], QPushButton#anchorChip[fp_narrow="true"] {{ min-width: 0px; }}  QPushButton#primaryButton[fp_short="true"], QPushButton#secondaryButton[fp_short="true"], QPushButton#dangerButton[fp_short="true"], QPushButton#actionButton[fp_short="true"], QPushButton#helpCloseButton[fp_short="true"], QPushButton#anchorChip[fp_short="true"] {{ min-height: 0px; }}  /* RN-442：ID 选择器比属性选择器更具体，必须逐个点名；两个轴各一个标记 */
+            QPushButton#secondaryButton:focus {{
+                border: 2px solid {c.border_focus};
+                padding: {max(0, button.secondary_padding_vertical - 1)}px {max(0, button.secondary_padding_horizontal - 1)}px;
+            }}
+
+            /* 试听分裂按钮(QToolButton)复用 secondary 外观：
+               2.2.1 引入 QToolButton 时漏了这段，导致按钮回退默认样式变黑 */
+            QToolButton#secondaryButton {{
+                background-color: {c.bg_elevated};  /* RN-640：次级按钮改软填充，不靠亮线立边界 */
+                color: {c.text_primary};
+                border: {button.secondary_border_width}px solid {self.resting_border(c)};
+                border-radius: {button.secondary_border_radius}px;
+                padding: {button.secondary_padding_vertical}px {button.secondary_padding_horizontal}px;
+                font-size: {button.secondary_font_size}px;
+                min-height: {qss_box(button.secondary_height, button.secondary_padding_vertical, button.secondary_border_width)}px;
+            }}
+
+            QToolButton#secondaryButton:hover {{
+                background-color: {c.bg_tertiary};
+                border-color: {c.accent_primary};
+            }}
+
+            QToolButton#secondaryButton:pressed {{
+                background-color: {c.bg_elevated};
+            }}
+
+            QToolButton#secondaryButton::menu-button {{
+                border: none;
+                border-left: 1px solid {self.resting_border(c)};  /* RN-640 */
+                width: 16px;
+            }}
+
+            QPushButton#iconButton {{
+                background-color: transparent;
+                border: none;
+                border-radius: {button.icon_border_radius}px;
+                padding: {spacing.sm}px;
+                min-width: {qss_box(button.icon_size, spacing.sm)}px;
+                min-height: {qss_box(button.icon_size, spacing.sm)}px;
+            }}
+            
+            QPushButton#iconButton:hover {{
+                background-color: {c.bg_tertiary};
+            }}
+            
+            /* 操作按钮（测试、预览等） */
+            QPushButton#actionButton {{
+                background-color: {c.bg_elevated};
+                color: {c.text_primary};
+                border: 1px solid {c.border_primary};
+                border-radius: {button.action_border_radius}px;
+                padding: {button.action_padding_vertical}px {button.action_padding_horizontal}px;
+                font-size: {button.action_font_size}px;
+                min-height: {qss_box(button.action_height, button.action_padding_vertical, 1)}px;
+                font-weight: 500;
+            }}
+            
+            /* UP-076: 字色按渐变**两端**收敛到 AA。原先直接用 accent_primary,
+             * 实测最差端只有 dark 2.50 / warm 2.28 / rose 2.99 / light 2.94 /
+             * purple 3.64 —— 5/9 主题不过 AA,而 actionButton 是全站最常见的按钮。
+             * border-color 属非文字对比(1.4.11),归 UP-063,本轮按决策不动。 */
+            QPushButton#actionButton:hover {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                    stop:0 {c.bg_tertiary}, stop:1 {c.bg_elevated});
+                border-color: {c.accent_primary};
+                color: {self._accent_text_on(c.bg_tertiary, c.bg_elevated)};
+            }}
+
+            QPushButton#actionButton:pressed {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                    stop:0 {c.accent_primary}, stop:1 {self._accent_gradient_top()});
+                color: {c.text_on_primary};
+                border-color: {c.accent_primary};
+            }}
+
+            /* v5 Phase 9: focus ring */
+            QPushButton#actionButton:focus {{
+                border: 2px solid {c.border_focus};
+                padding: {max(0, button.action_padding_vertical - 1)}px {max(0, button.action_padding_horizontal - 1)}px;
+            }}
+
+            /* v5 Phase 9: 通用 QPushButton focus(navButton/iconButton 等无显式 :focus 的也走这) */
+            QPushButton#navButton:focus, QPushButton#navGroupHeader:focus, QPushButton#hamburgerButton:focus, QPushButton#accountQuickButton:focus, QPushButton#helpButton:focus, QPushButton#helpCloseButton:focus, QPushButton#modeToggleButton:focus, QPushButton#modeToggleIconButton:focus {{ border: 2px solid {c.border_focus}; }}  /* RN-546：这 8 类原来只落到 `QPushButton:focus {{ outline: none }}` 上 —— Tab 上去一个像素都不变 */
+            QPushButton:focus {{
+                outline: none;
+            }}
+
+            /* UP-073: `AppButton.ghost()` 从加进来那天起就产出 objectName=ghostButton,
+             * 而 QSS 里一条对应规则都没有(源码注释写着"Phase 4 时加",没加成)——
+             * 于是它是"5+1 语义按钮"里唯一一个完全没样式的。测试只断言 objectName
+             * 相等，所以一直是绿的。这里补齐：无边框无底、仅文字，hover 才浮出底色。 */
+            QPushButton#ghostButton {{
+                background-color: transparent;
+                color: {c.text_secondary};
+                border: 1px solid transparent;
+                border-radius: {button.action_border_radius}px;
+                padding: {button.action_padding_vertical}px {button.action_padding_horizontal}px;
+                font-size: {button.action_font_size}px;
+                min-height: {qss_box(button.action_height, button.action_padding_vertical, 1)}px;
+                font-weight: 500;
+            }}
+
+            QPushButton#ghostButton:hover {{
+                background-color: {c.bg_tertiary};
+                color: {c.text_primary};
+            }}
+
+            QPushButton#ghostButton:pressed {{
+                background-color: {c.bg_elevated};
+                color: {self._accent_text_on(c.bg_elevated)};
+            }}
+
+            QPushButton#ghostButton:focus {{
+                border: 2px solid {c.border_focus};
+                padding: {max(0, button.action_padding_vertical - 1)}px {max(0, button.action_padding_horizontal - 1)}px;
+            }}
+
+            QPushButton#ghostButton:disabled {{
+                color: {c.text_on_disabled};
+                background-color: transparent;
+            }}
+            
+            /* UP-017: 页内锚点 chip。不复用 secondaryButton 是因为那条规则带
+             * min-width:80——10 个 2~4 字的 chip 各占 80px 会把页面最小宽度顶到
+             * 1284px，在禁了横向滚动的页面上直接造成"控件永久够不到"。
+             * 这里按内容自适应，配合 FlowLayout 在窄窗口下换行。 */
+            QPushButton#anchorChip {{
+                background-color: transparent;
+                color: {c.text_secondary};
+                border: 1px solid {c.border_primary};
+                border-radius: {radius.sm}px;
+                padding: 2px {spacing.sm}px;
+                font-size: {font.xs}px;
+                /* RN-547 残余（批 66）：高度只有这一处声明。批 67 起走 RN-551 那条换算，
+                 * 不再手算 —— 26 是这颗 chip 的目标总高，padding 2 / border 1 各占两边。 */
+                min-width: 0px;
+                min-height: {qss_box(26, 2, 1)}px;
+                max-height: {qss_box(26, 2, 1)}px;
+            }}
+
+            /* RN-550：下限已由通用 QLineEdit 规则给对（RN-551），这里只剩上限干活 */
+            QLineEdit#settingsSearchBox {{
+                max-height: {qss_box(input_spec.text_height, input_spec.text_padding_vertical, input_spec.text_border_width)}px;
+            }}
+
+            QPushButton#anchorChip:hover {{
+                background-color: {c.bg_tertiary};
+                border-color: {c.accent_primary};
+                color: {c.text_primary};
+            }}
+
+            QPushButton#anchorChip:pressed {{
+                background-color: {c.bg_elevated};
+            }}
+
+            /* RN-431（批 66）：当前在哪一段；选中态跟着滚动位置走（widgets/anchor_bar.py）*/
+            QPushButton#anchorChip:checked {{
+                background-color: {c.bg_tertiary};
+                border-color: {c.border_focus};
+                color: {c.text_primary};
+                font-weight: 600;
+            }}
+
+            /* RN-443（批 66）：前导词，直说这排是「跳到本页的某一段」*/
+            QLabel#anchorLead {{
+                color: {c.text_muted};
+                font-size: {font.xs}px;
+                background: transparent;
+                padding: 0px {spacing.xs}px;
+            }}
+
+            /* 危险操作按钮 */
+            QPushButton#dangerButton {{
+                background-color: {self._danger_bg()};
+                color: {self._on_color(self._danger_bg())};
+                border: none;
+                border-radius: {button.danger_border_radius}px;
+                padding: {button.danger_padding_vertical}px {button.danger_padding_horizontal}px;
+                font-weight: 600;
+                font-size: {button.danger_font_size}px;
+                min-height: {qss_box(button.danger_height, button.danger_padding_vertical)}px;
+                min-width: {qss_box(button.primary_min_width, button.danger_padding_horizontal)}px;
+            }}
+
+            QPushButton#dangerButton:hover {{
+                background-color: {self._darken_color(c.error, 0.85)};
+            }}
+
+            QPushButton#dangerButton:pressed {{
+                background-color: {self._darken_color(c.error, 0.7)};
+            }}
+
+            /* ⭐⭐ 批 29：**没有东西可丢的时候，危险按钮不占用危险色。**
+             *
+             * `style_as_danger_button` 的文档第 3 行就写着「红色语义要稀缺才有效；
+             * 到处都是红的等于没有红的」——而 voice_output 全新用户那一屏上是
+             * **5 颗高饱和红**，每一颗管的都是「删掉一个什么都没有的行」。
+             *
+             * ⚠⚠ 为什么走**属性**而不是换 objectName（第一版就是换名，被数堵回来了）：
+             *   `dangerButton` 的最小宽是 **116**、`secondaryButton` 是 **118** ——
+             *   换名等于给这一行凭空加 2px，而同一行里那个 Expanding 的
+             *   「未选择」标签本来就只剩 43px，2px 一挤就变成 41px / 需 42px ⇒ 折行。
+             *   ⭐⭐ **我改的是「警报级别」，付出的却是两个像素，
+             *     而代价落在同一行另一个控件上。**
+             * ⇒ 同名不同属性：`border` 保持 `none`、padding / min-width 一律不动，
+             *   **只换填充色**。几何零变化。 */
+            QPushButton#dangerButton[nothingToLose="true"] {{
+                background-color: {c.bg_tertiary};
+                color: {c.text_secondary};
+            }}
+
+            QPushButton#dangerButton[nothingToLose="true"]:hover {{
+                background-color: {c.bg_elevated};
+                color: {c.text_primary};
+            }}
+
+            QPushButton#dangerButton[nothingToLose="true"]:pressed {{
+                background-color: {c.bg_secondary};
+            }}
+            
+            /* 统一按钮文字显示修复 */
+            QPushButton {{
+                color: {c.text_primary};
+                background-color: {c.bg_tertiary};
+                border: 1px solid {self.resting_border(c)};  /* RN-640 */
+                border-radius: {button.secondary_border_radius}px;
+                text-align: center;
+                padding: {generic_button_padding_vertical}px {generic_button_padding_horizontal}px;
+                font-size: {font.md}px;
+                min-height: {qss_box(height.sm, generic_button_padding_vertical, 1)}px;
+            }}
+
+            QPushButton:hover {{
+                background-color: {c.bg_elevated};
+                border-color: {c.accent_primary};
+            }}
+
+            QPushButton:pressed {{
+                background-color: {c.bg_secondary};
+            }}
+            
+            /* ========== 复选框样式 ========== */
+            QCheckBox {{
+                color: {c.text_primary};
+                font-size: {font.md}px;
+                spacing: {spacing.md - 2}px;
+            }}
+            
+            QCheckBox::indicator {{
+                width: {toggle.checkbox_size}px;
+                height: {toggle.checkbox_size}px;
+                border-radius: {toggle.checkbox_border_radius}px;
+                border: {toggle.checkbox_border_width}px solid {c.border_primary};
+                background-color: transparent;
+            }}
+            
+            QCheckBox::indicator:checked {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                    stop:0 {self._lighten_color(c.accent_primary)}, stop:1 {c.accent_primary});
+                border-color: {c.accent_primary};
+                {check_rule}
+            }}
+            
+            QCheckBox::indicator:hover {{
+                border-color: {c.accent_primary};
+            }}
+            
+            QCheckBox::indicator:disabled {{
+                border-color: {c.border_secondary};
+                background-color: {c.bg_secondary};
+            }}
+            
+            /* ========== 单选框样式 ========== */
+            QRadioButton {{
+                color: {c.text_primary};
+                font-size: {font.md}px;
+                spacing: {spacing.sm}px;
+            }}
+            
+            /* ⚠ RN-066/076：radius 按**外框**算，为什么见 tests/test_radio_indicator_is_round.py */
+            QRadioButton::indicator {{
+                width: {toggle.radio_size}px;
+                height: {toggle.radio_size}px;
+                border-radius: {(toggle.radio_size + 2 * toggle.radio_border_width) // 2}px;
+                border: {toggle.radio_border_width}px solid {c.accent_primary};
+                background-color: transparent;
+            }}
+
+            QRadioButton::indicator:checked {{
+                background-color: white;
+                border: {max(4, toggle.radio_border_width + 3)}px solid {c.accent_primary};
+                border-radius: {(toggle.radio_size + 2 * max(4, toggle.radio_border_width + 3)) // 2}px;
+            }}
+            
+            QRadioButton::indicator:hover {{
+                border-color: {c.accent_hover};
+            }}
+            
+            /* ========== 关于页面专用样式 ========== */
+            QLabel#logoTitle {{
+                color: {c.accent_primary};
+            }}
+            
+            QLabel#versionText {{
+                color: {c.text_secondary};
+            }}
+            
+            QLabel#infoLabel {{
+                padding: 15px;
+                background-color: {c.bg_secondary};
+                border-radius: {container.groupbox_border_radius}px;
+            }}
+            
+            /* ========== 列表控件样式 ========== */
+            QListWidget, QTableWidget, QTreeWidget, QTableView, QTreeView {{
+                background-color: {c.bg_secondary};
+                color: {c.text_primary};
+                border: 1px solid {c.border_secondary};
+                border-radius: {container.groupbox_border_radius}px;
+                padding: {spacing.xs + 1}px;
+                outline: none;
+            }}
+
+            QTableWidget, QTableView {{
+                gridline-color: {c.border_secondary};
+            }}
+
+            QHeaderView::section {{
+                background-color: {c.bg_tertiary};
+                color: {c.text_primary};
+                border: 1px solid {c.border_secondary};
+                border-left: none;
+                border-top: none;
+                padding: {table.cell_padding_vertical}px {max(10, table.cell_padding_horizontal - 2)}px;
+                font-weight: 600;
+            }}
+
+            QHeaderView::section:first {{
+                border-left: 1px solid {c.border_secondary};
+            }}
+
+            QTableCornerButton::section {{
+                background-color: {c.bg_tertiary};
+                border: 1px solid {c.border_secondary};
+            }}
+            
+            QListWidget::item, QTableWidget::item, QTreeWidget::item, QTableView::item, QTreeView::item {{
+                padding: {list_spec.item_padding_vertical}px {list_spec.item_padding_horizontal}px;
+                border-radius: {list_spec.item_border_radius}px;
+                color: {c.text_primary};
+            }}
+            
+            QListWidget::item:selected, QTableWidget::item:selected, QTreeWidget::item:selected, QTableView::item:selected, QTreeView::item:selected {{
+                background-color: {c.accent_primary};
+                color: {c.text_on_primary};
+            }}
+            
+            QListWidget::item:hover, QTableWidget::item:hover, QTreeWidget::item:hover, QTableView::item:hover, QTreeView::item:hover {{
+                background-color: {c.bg_tertiary};
+            }}
+            
+            /* ========== 滑块样式 ========== */
+            QSlider::groove:horizontal {{
+                height: {slider.horizontal_height}px;
+                background: {self._blend_hex(c.text_tertiary, 60, c.bg_card)};  /* RN-642：槽比填充暗，别再是一根亮条 */
+                border-radius: {slider.horizontal_border_radius}px;
+            }}
+            
+            QSlider::sub-page:horizontal {{
+                background: {c.accent_primary};  /* RN-640：去渐变，滑块只剩一根线一颗点 */
+                border-radius: {slider.horizontal_border_radius}px;
+            }}
+            
+            QSlider::handle:horizontal {{
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 {self._lighten_color(c.accent_primary)}, stop:1 {c.accent_primary});
+                width: {slider.horizontal_handle_size}px;
+                height: {slider.horizontal_handle_size}px;
+                margin: {-((slider.horizontal_handle_size - slider.horizontal_height) // 2)}px 0;
+                border-radius: {slider.horizontal_handle_size // 2}px;
+                border: 2px solid {c.bg_card};  /* RN-640：白圈改成底色圈，只留一圈呼吸位 */
+            }}
+            
+            QSlider::handle:horizontal:hover {{
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 {self._accent_gradient_top(c.accent_hover)}, stop:1 {c.accent_hover});
+                width: {slider.horizontal_handle_size + 2}px;
+                height: {slider.horizontal_handle_size + 2}px;
+                margin: {-(((slider.horizontal_handle_size + 2) - slider.horizontal_height) // 2)}px 0;
+            }}
+            
+            QSlider::groove:vertical {{
+                width: {slider.vertical_width}px;
+                background: {self._blend_hex(c.text_tertiary, 60, c.bg_card)};  /* RN-642 */
+                border-radius: {slider.vertical_border_radius}px;
+            }}
+            
+            QSlider::sub-page:vertical {{
+                background: {c.accent_primary};
+                border-radius: {slider.vertical_border_radius}px;
+            }}
+            
+            QSlider::handle:vertical {{
+                background: {c.accent_primary};
+                width: {slider.vertical_handle_size}px;
+                height: {slider.vertical_handle_size}px;
+                margin: 0 {-((slider.vertical_handle_size - slider.vertical_width) // 2)}px;
+                border-radius: {slider.vertical_handle_size // 2}px;
+            }}
+            
+            /* ========== 下拉框样式 ========== */
+            QComboBox {{
+                background-color: {c.bg_secondary};
+                color: {c.text_primary};
+                border: {input_spec.combobox_border_width}px solid {self.resting_border(c)};  /* RN-640：静态边弱化 */
+                border-radius: {input_spec.combobox_border_radius}px;
+                padding: {input_spec.combobox_padding_vertical}px {input_spec.combobox_padding_horizontal}px;
+                font-size: {input_spec.combobox_font_size}px;
+                min-height: {qss_box(input_spec.combobox_height, input_spec.combobox_padding_vertical, input_spec.combobox_border_width)}px;
+            }}
+            
+            QComboBox:hover {{
+                border-color: {c.accent_primary};
+            }}
+            
+            QComboBox:focus {{
+                border: {combo_focus_border_width}px solid {c.border_focus};
+                padding: {combo_focus_padding_vertical}px {combo_focus_padding_horizontal}px;
+            }}
+            
+            QComboBox::drop-down {{
+                border: none;
+                width: {input_spec.combobox_arrow_width + 8}px;
+                padding-right: 8px;
+            }}
+            
+            QComboBox::down-arrow {{
+                {arrow_rule}
+                width: 10px;
+                height: 6px;
+            }}
+            
+            QComboBox QAbstractItemView {{
+                background-color: {c.bg_secondary};
+                color: {c.text_primary};
+                selection-background-color: {c.accent_primary};
+                selection-color: {c.text_on_primary};
+                border: 1px solid {c.border_primary};
+                border-radius: {input_spec.combobox_border_radius}px;
+                padding: 6px;
+                outline: none;
+            }}
+            
+            QComboBox QAbstractItemView::item {{
+                padding: 10px 14px;
+                border-radius: 6px;
+                color: {c.text_primary};
+            }}
+            
+            QComboBox QAbstractItemView::item:hover {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 {c.bg_tertiary}, stop:1 transparent);
+                color: {c.text_primary};
+            }}
+            
+            QComboBox QAbstractItemView::item:selected {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 {c.accent_primary}, stop:1 {self._accent_gradient_top()});
+                color: {c.text_on_primary};
+            }}
+            
+            /* ========== 输入框样式 ========== */
+            QLineEdit, QSpinBox, QDoubleSpinBox {{
+                background-color: {c.bg_secondary};
+                color: {c.text_primary};
+                border: {input_spec.text_border_width}px solid {self.resting_border(c)};  /* RN-640 */
+                border-radius: {input_spec.text_border_radius}px;
+                padding: {input_spec.text_padding_vertical}px {input_spec.text_padding_horizontal}px;
+                font-size: {input_spec.text_font_size}px;
+                min-height: {qss_box(input_spec.text_height, input_spec.text_padding_vertical, input_spec.text_border_width)}px;
+                selection-background-color: {c.accent_primary};
+                selection-color: {c.text_on_primary};
+            }}
+            
+            QLineEdit:hover, QSpinBox:hover, QDoubleSpinBox:hover {{
+                border-color: {c.accent_primary};
+            }}
+            
+            QLineEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus {{
+                border: {focus_border_width}px solid {c.border_focus};
+                padding: {focus_padding_vertical}px {focus_padding_horizontal}px;
+            }}
+            
+            QSpinBox::up-button, QDoubleSpinBox::up-button {{
+                background-color: {c.bg_elevated};
+                border-radius: {spin_button_radius}px;
+                width: 16px;
+            }}
+            
+            QSpinBox::up-button:hover, QDoubleSpinBox::up-button:hover {{
+                background-color: {c.bg_tertiary};
+            }}
+            
+            QSpinBox::down-button, QDoubleSpinBox::down-button {{
+                background-color: {c.bg_elevated};
+                border-radius: {spin_button_radius}px;
+                width: 16px;
+            }}
+            
+            QSpinBox::down-button:hover, QDoubleSpinBox::down-button:hover {{
+                background-color: {c.bg_tertiary};
+            }}
+            
+            /* ========== 滚动条样式 ========== */
+            QScrollBar:vertical {{
+                background: {c.bg_tertiary};  /* RN-045：轨道原来是 transparent —— 屏幕上只有一小节把手浮着，没有「这里是一条可滚的槽」这件事。画出来不占一个像素的版面 */
+                width: {scrollbar.width}px;
+                border-radius: {scrollbar.border_radius}px;
+                margin: {scrollbar.margin + 2}px {scrollbar.margin}px;
+            }}
+
+            QScrollBar::handle:vertical {{
+                background: {c.scrollbar_handle};
+                border-radius: {scrollbar.border_radius}px;
+                min-height: {scrollbar.handle_min_height}px;
+            }}
+
+            QScrollBar::handle:vertical:hover {{
+                background: {c.scrollbar_hover};
+            }}
+
+            QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {{
+                height: 0px;
+            }}
+
+            QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {{
+                background: none;
+            }}
+
+            QScrollBar:horizontal {{
+                background: {c.bg_tertiary};  /* RN-045：轨道原来是 transparent —— 屏幕上只有一小节把手浮着，没有「这里是一条可滚的槽」这件事。画出来不占一个像素的版面 */
+                height: {scrollbar.width}px;
+                border-radius: {scrollbar.border_radius}px;
+                margin: {scrollbar.margin}px {scrollbar.margin + 2}px;
+            }}
+
+            QScrollBar::handle:horizontal {{
+                background: {c.scrollbar_handle};
+                border-radius: {scrollbar.border_radius}px;
+                min-width: {scrollbar.handle_min_height}px;
+            }}
+
+            QScrollBar::handle:horizontal:hover {{
+                background: {c.scrollbar_hover};
+            }}
+            
+            QScrollBar::add-line:horizontal, QScrollBar::sub-line:horizontal {{
+                width: 0px;
+            }}
+            
+            QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {{
+                background: none;
+            }}
+            
+            /* ========== 标签页样式（v4: 胶囊式更现代）========== */
+            QTabWidget::pane {{
+                border: none;
+                background-color: transparent;
+                top: 0px;
+            }}
+
+            QTabBar {{
+                qproperty-drawBase: 0;  /* 去除下方分隔线 */
+            }}
+
+            QTabBar::tab {{
+                background-color: transparent;
+                color: {c.text_muted};
+                border: 1px solid transparent;
+                border-radius: 8px;
+                padding: 8px 16px;
+                margin: 2px 3px;
+                font-size: {font.sm}px;
+                font-weight: 500;
+                min-height: 22px;
+            }}
+
+            QTabBar::tab:hover {{
+                color: {c.text_primary};
+                background-color: {self._hex_to_rgba(c.bg_elevated, 120)};
+            }}
+
+            QTabBar::tab:selected {{
+                color: {c.text_primary};
+                background-color: {self._hex_to_rgba(c.accent_primary, 36)};
+                border: 1px solid {self._hex_to_rgba(c.accent_primary, 90)};
+                font-weight: 600;
+            }}
+            
+            /* ========== 对话框样式 ========== */
+            QDialog {{
+                background-color: {c.bg_primary};
+                color: {c.text_primary};
+            }}
+            
+            /* ========== QMessageBox样式 ========== */
+            QMessageBox {{
+                background-color: {c.bg_primary};
+                color: {c.text_primary};
+            }}
+            
+            QMessageBox QLabel {{
+                color: {c.text_primary};
+                font-size: 14px;
+            }}
+            
+            QMessageBox QPushButton {{
+                background-color: {c.accent_primary};
+                color: {c.text_on_primary};
+                border: none;
+                border-radius: {button.primary_border_radius}px;
+                padding: {button.primary_padding_vertical}px {button.primary_padding_horizontal}px;
+                font-size: {button.primary_font_size}px;
+                min-width: {qss_box(button.primary_min_width, button.primary_padding_horizontal)}px;
+                min-height: {qss_box(button.primary_height, button.primary_padding_vertical)}px;
+            }}
+            
+            QMessageBox QPushButton:hover {{
+                background-color: {c.accent_hover};
+            }}
+            
+            QMessageBox QPushButton:pressed {{
+                background-color: {c.accent_pressed};
+            }}
+            
+            /* ========== 文本编辑器样式 ========== */
+            QTextEdit, QPlainTextEdit {{
+                background-color: {c.bg_secondary};
+                color: {c.text_primary};
+                border: {input_spec.textarea_border_width}px solid {c.border_primary};  /* RN-545：控件边界 */
+                border-radius: {input_spec.textarea_border_radius}px;
+                padding: {input_spec.textarea_padding}px;
+                font-size: {input_spec.textarea_font_size}px;
+                selection-background-color: {c.accent_primary};
+                selection-color: {c.text_on_primary};
+            }}
+            
+            QTextEdit:focus, QPlainTextEdit:focus {{
+                border: {focus_border_width}px solid {c.border_focus};
+                padding: {textarea_focus_padding}px;
+            }}
+            
+            /* ========== 进度条样式 ========== */
+            QProgressBar {{
+                background-color: {c.bg_secondary};
+                border: none;
+                border-radius: {slider.progressbar_border_radius}px;
+                height: {slider.progressbar_height}px;
+                text-align: center;
+            }}
+
+            QProgressBar::chunk {{
+                background-color: {c.accent_primary};
+                border-radius: {slider.progressbar_border_radius}px;
+            }}
+            
+            /* ========== 分组框样式 ========== */
+            QGroupBox {{
+                background-color: {c.bg_secondary};
+                border: {container.groupbox_border_width}px solid {c.border_secondary};
+                border-radius: {container.groupbox_border_radius}px;
+                margin-top: {spacing.xl - 4}px;
+                padding: {container.groupbox_padding}px;
+                padding-top: {container.groupbox_padding + 12}px;
+                font-weight: 600;
+                color: {c.text_primary};
+            }}
+
+            QGroupBox::title {{
+                subcontrol-origin: margin;
+                subcontrol-position: top left;
+                left: {container.groupbox_padding}px;
+                top: 6px;
+                padding: 0 {container.groupbox_title_padding}px;
+                background-color: {c.bg_secondary};
+                color: {c.accent_primary};
+                font-size: {font.lg}px;
+            }}
+            
+            /* ========== 工具提示样式 ========== */
+            QToolTip {{
+                background-color: {c.bg_elevated};
+                color: {c.text_primary};
+                border: 1px solid {c.border_primary};
+                border-radius: {tooltip.border_radius}px;
+                padding: {tooltip.padding_vertical}px {tooltip.padding_horizontal}px;
+                font-size: {tooltip.font_size}px;
+            }}
+            
+            /* ========== 菜单样式 ========== */
+            QMenu {{
+                background-color: {c.bg_secondary};
+                border: 1px solid {c.border_primary};
+                border-radius: {radius.md}px;
+                padding: {spacing.xs}px;
+            }}
+            
+            QMenu::item {{
+                background-color: transparent;
+                color: {c.text_primary};
+                padding: {spacing.sm}px {spacing.xl}px {spacing.sm}px {spacing.md}px;
+                border-radius: {radius.sm}px;
+            }}
+            
+            QMenu::item:selected {{
+                background-color: {c.accent_primary};
+                color: {c.text_on_primary};
+            }}
+            
+            QMenu::separator {{
+                height: 1px;
+                background: {c.border_secondary};
+                margin: 4px 8px;
+            }}
+            
+            /* ========== 音乐控制栏样式 - 紧凑卡片化分组 ========== */
+            QWidget#musicControlBar {{
+                background-color: {c.bg_secondary};
+                border-top: none;
+            }}
+
+            QWidget#musicControlBar > QWidget,
+            QWidget#musicControlBar QWidget#musicFullControls,
+            QWidget#musicControlBar QWidget#musicProgressRow,
+            QWidget#musicControlBar QWidget#musicControlsRow {{
+                background: transparent;
+                border: none;
+            }}
+
+            QWidget#musicControlBar QWidget#miniBar {{
+                background: transparent;
+                border: none;
+                border-bottom: 1px solid {self._hex_to_rgba(c.border_secondary, 96)};
+            }}
+
+            QWidget#musicControlBar QLabel {{
+                color: {c.text_primary};
+                background: transparent;
+            }}
+
+            QWidget#musicControlBar QLabel#musicMiniTrackLabel {{
+                color: {c.text_secondary};
+                font-size: 12px;
+                font-weight: 500;
+            }}
+
+            QWidget#musicControlBar QLabel#musicTrackTitle {{
+                color: {c.text_primary};
+                font-size: 14px;
+                font-weight: 700;
+            }}
+
+            QWidget#musicControlBar QLabel#musicTrackArtist {{
+                color: {c.text_secondary};
+                font-size: 12px;
+            }}
+
+            QWidget#musicControlBar QLabel#musicTimeLabel {{
+                color: {c.text_muted};
+                font-size: 12px;
+                font-weight: 500;
+            }}
+            
+            QWidget#musicControlBar QPushButton {{
+                background-color: transparent;
+                color: {c.text_primary};
+                border: none;
+                border-radius: 8px;
+                padding: 0px;
+                outline: none;
+            }}
+            
+            QWidget#musicControlBar QPushButton:hover {{
+                background-color: {self._hex_to_rgba(c.bg_tertiary, 210)};
+                color: {c.accent_primary};
+            }}
+            
+            QWidget#musicControlBar QPushButton:pressed {{
+                background-color: {self._hex_to_rgba(c.bg_elevated, 230)};
+            }}
+            
+            QWidget#musicControlBar QPushButton#primaryButton {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                    stop:0 {self._accent_gradient_top()}, stop:1 {c.accent_primary});
+                color: {c.text_on_primary};
+                border: none;
+                border-radius: 10px;
+                padding: 0px;
+                min-width: 44px;
+            }}
+            
+            QWidget#musicControlBar QPushButton#primaryButton:hover {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                    stop:0 {self._accent_gradient_top(c.accent_hover)}, stop:1 {c.accent_hover});
+            }}
+            
+            QWidget#musicControlBar QPushButton#primaryButton:pressed {{
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                    stop:0 {self._accent_gradient_top(c.accent_pressed)}, stop:1 {c.accent_pressed});
+            }}
+            
+            QWidget#musicControlBar QWidget#musicInfoButton {{
+                background-color: {c.bg_elevated};
+                border: 1px solid {self._hex_to_rgba(c.border_primary, 140)};
+                border-radius: 12px;
+                padding: 0px;
+            }}
+
+            QWidget#musicControlBar QWidget#musicInfoButton[hovered="true"] {{
+                background-color: {self._lighten_color(c.bg_elevated, 1.08)};
+                border: 1px solid {self._hex_to_rgba(c.accent_primary, 110)};
+            }}
+
+            QWidget#musicControlBar QWidget#musicInfoButton[pressed="true"] {{
+                background-color: {self._lighten_color(c.bg_secondary, 1.04)};
+                border: 1px solid {self._hex_to_rgba(c.accent_primary, 136)};
+            }}
+
+            QWidget#musicControlBar QWidget#musicInfoButton[playState="active"] {{
+                background-color: {c.bg_elevated};
+                border: 1px solid {self._hex_to_rgba(c.accent_primary, 96)};
+            }}
+
+            QWidget#musicControlBar QWidget#musicInfoButton[playState="paused"] {{
+                /* 对标修缮：暂停是常态而非异常，不再用 warning 黄边
+                   （浅色主题下尤其突兀）；保持中性边框，播放中才点亮 accent */
+                background-color: {c.bg_elevated};
+                border: 1px solid {self._hex_to_rgba(c.border_primary, 140)};
+            }}
+
+            QWidget#musicControlBar QWidget#musicUtilityGroup {{
+                background-color: {c.bg_elevated};
+                border: 1px solid {self._hex_to_rgba(c.border_primary, 135)};
+                border-radius: 12px;
+            }}
+
+            QWidget#musicControlBar QPushButton#actionButton {{
+                background-color: transparent;
+                color: {c.text_primary};
+                border: none;
+                border-radius: 8px;
+                padding: 0px;
+                font-size: 16px;
+            }}
+            
+            /* UP-076 同类：音乐控制条的 actionButton 也拿 accent 当字色。
+             * 底是半透明色叠在 musicControlBar 的 bg_secondary 上,
+             * 必须按**合成后**的颜色收敛——直接拿 rgba 原色算会偏乐观。 */
+            QWidget#musicControlBar QPushButton#actionButton:hover {{
+                background-color: {self._hex_to_rgba(c.bg_tertiary, 210)};
+                color: {self._accent_text_on(self._blend_hex(c.bg_tertiary, 210, c.bg_secondary))};
+            }}
+
+            QWidget#musicControlBar QPushButton#actionButton:pressed {{
+                background-color: {self._hex_to_rgba(c.bg_primary, 235)};
+                color: {self._accent_text_on(self._blend_hex(c.bg_primary, 235, c.bg_secondary))};
+            }}
+            
+            QWidget#musicControlBar QSlider::groove:horizontal {{
+                background: {self._hex_to_rgba(c.border_primary, 170)};
+                height: 4px;
+                border-radius: 2px;
+            }}
+            
+            QWidget#musicControlBar QSlider::add-page:horizontal {{
+                background: {self._hex_to_rgba(c.border_primary, 110)};
+                border-radius: 2px;
+            }}
+
+            QWidget#musicControlBar QSlider::sub-page:horizontal {{
+                background: {c.accent_primary};
+                height: 4px;
+                border-radius: 2px;
+            }}
+            
+            QWidget#musicControlBar QSlider::handle:horizontal {{
+                background: {c.accent_primary};
+                width: 11px;
+                height: 11px;
+                margin: -4px 0;
+                border-radius: 5px;
+                border: 2px solid {c.bg_secondary};
+            }}
+            
+            QWidget#musicControlBar QSlider::handle:horizontal:hover {{
+                background: {c.accent_hover};
+                width: 12px;
+                height: 12px;
+                margin: -4px 0;
+                border-radius: 6px;
+            }}
+
+            /* ========== 禁用态（UP-022 / D-16）==========
+             * 原状：除 primaryButton 外,所有控件的禁用态在视觉上和可用态完全一样。
+             * 后果不是"不好看"——用户会反复去点一个点不动的按钮,以为是软件卡了。
+             * QSS 没有 opacity,只能走颜色 token：文字灰化 + 底色降级 + 边框淡化。
+             * 放在样式表末尾:同特异度下 QSS 后来者胜,保证能压过前面各控件的常态规则;
+             * 而 `#primaryButton:disabled` 特异度更高,它自己的规则仍然生效。 */
+            QPushButton:disabled,
+            QComboBox:disabled,
+            QLineEdit:disabled,
+            QSpinBox:disabled,
+            QDoubleSpinBox:disabled,
+            QTextEdit:disabled,
+            QPlainTextEdit:disabled {{
+                /* R7 补 R4 的漏：这里原来用 text_disabled，而它是按「和常态文字能
+                 * 分辨」挑的，压在下面那个 bg_tertiary@90 的底上只有 1.64~2.33:1
+                 * （8/8 主题实测），文字等于消失了。text_on_disabled 是按**合成后**
+                 * 的底色收敛到 3:1 的——弱化但不隐身。 */
+                color: {c.text_on_disabled};
+                background-color: {self._hex_to_rgba(c.bg_tertiary, 90)};
+                border-color: {self._hex_to_rgba(c.border_secondary, 110)};
+            }}
+
+            /* R7/D-06: 危险按钮的禁用态。
+             * `#dangerButton` 是 id 选择器（特异度 1,0,1），压过上面那条
+             * `QPushButton:disabled`（0,1,1）—— 不显式写这条的话，禁用的危险按钮
+             * 会保持满红，和可点的一模一样。
+             * 处理方式是**退回中性禁用态而不是"淡红"**：红色的语义是「点下去会毁数据」，
+             * 禁用的语义是「你点不了」，两者同时出现是自相矛盾的。
+             * （试过 error@70 的淡红方案，实测禁用字只有 1.19~1.74:1，也看不清。） */
+            QPushButton#dangerButton:disabled {{
+                color: {c.text_on_disabled};
+                background-color: {self._hex_to_rgba(c.bg_tertiary, 90)};
+                border: 1px solid {self._hex_to_rgba(c.border_secondary, 110)};
+            }}
+
+            QPushButton#secondaryButton:disabled,
+            QPushButton#actionButton:disabled {{
+                color: {c.text_disabled};
+                background-color: transparent;
+                border-color: {self._hex_to_rgba(c.border_secondary, 110)};
+            }}
+
+            QCheckBox:disabled,
+            QRadioButton:disabled,
+            QLabel:disabled,
+            QGroupBox:disabled {{
+                color: {c.text_disabled};
+            }}
+
+            QRadioButton::indicator:disabled {{
+                border-color: {self._hex_to_rgba(c.border_secondary, 110)};
+                background-color: {self._hex_to_rgba(c.bg_tertiary, 90)};
+            }}
+
+            QSlider::groove:horizontal:disabled,
+            QSlider::sub-page:horizontal:disabled {{
+                background: {self._hex_to_rgba(c.border_secondary, 110)};
+            }}
+
+            QSlider::handle:horizontal:disabled {{
+                background: {c.text_disabled};
+                border-color: {self._hex_to_rgba(c.border_secondary, 110)};
+            }}
+
+            QTabBar::tab:disabled {{
+                color: {c.text_disabled};
+            }}
+        """ + self._component_qss(c)
+
+    def _component_qss(self, c) -> str:
+        """后加的组件样式往这儿放，别再往上面那一坨里堆。
+
+        UP-058 判为不拆 `generate_stylesheet`，但立了一条棘轮：它**只许减不许增**
+        （`tests/test_closed_items_ratchet_r11.py`）。棘轮的报错里写得很清楚——
+        "新样式请开新方法"。这就是那个方法。
+        """
+        return f"""
+            /* KI-7: 卡片式单选（击杀图标的风格库）。选中态必须**看得出来**——
+             * 那一排卡片就是"当前用的是哪一套"的唯一答案，只靠名字前面加个
+             * 对勾太弱。只染左色条 + 提亮背景，**不动 border-width**：
+             * 改宽度会让卡内子控件左右跳，切风格时整排卡都会抖一下
+             * （和 QFrame#card[semantic] 那条不改宽度是同一个理由）。
+             * 颜色只能来自 ThemeColors token —— QSS 正文里 #RRGGBB 字面量
+             * 为 0 是本项目最值钱的架构资产，8 个主题靠它各自成立。 */
+            QFrame#card[selected="true"] {{
+                background-color: {self._hex_to_rgba(c.accent_primary, 28)};
+                border-color: {self._hex_to_rgba(c.accent_primary, 120)};  /* RN-643：选中 = 薄染 + 淡描边，不用色条 */
+            }}
+        """
+
+
+class DarkTheme(Theme):
+    """深色主题（v5 美学重做：注入蓝调 + dual accent + 卡片浮起）"""
+
+    def __init__(self):
+        colors = ThemeColors(
+            # 主背景色 — 5 层灰阶 + 注入 5° 蓝紫调（Linear / Vercel 风）
+            # 让 UI 不再是"工程师纯灰",有微妙的色调统一感
+            bg_primary="#0a0c12",     # 最底层背景（OLED 黑感）
+            bg_secondary="#14171f",   # 次要背景（侧边栏、状态栏）
+            bg_tertiary="#1c1f2c",    # 嵌套层 / hover
+            bg_elevated="#262a3a",    # 弹出层 / combo box 展开
+
+            # v5 新加：卡片专用,在 secondary 上提亮一档让阴影"浮起"看得见
+            bg_card="#1a1d27",        # 卡片底色（关键!阴影对比靠它）
+            bg_card_hover="#20242f",  # 卡片 hover 态
+
+            # 文字颜色 — 4 层
+            text_primary="#e8e9ed",     # 主文字（标题）
+            text_secondary="#a8aab3",   # 次要文字（正文）
+            text_tertiary="#6e7081",    # 辅助文字（hint）
+            text_disabled="#404252",    # 禁用
+
+            # 主题色 — v5 改 violet（Vercel 风,比 indigo 更华丽现代）
+            # 注：accent 总面积仍严格 < 8%，开关/激活态/链接才用
+            accent_primary="#7c3aed",     # 主强调（violet）
+            accent_hover="#8b4af2",       # hover 提亮
+            accent_pressed="#6929d0",     # 按下加深
+
+            # v5 新加：dual accent
+            accent_secondary="#06b6d4",   # 次强调（cyan）— 链接/次要 CTA
+            accent_warm="#f59e0b",        # 暖色（amber）— 警告/重要提示/倒计时
+
+            # 边框 — 弱化，让 elevation 阴影承担分隔
+            border_primary="#6c6e77",     # 主边框（hover 时使用）
+            border_secondary="#1f212c",   # 默认边框（更弱）
+            border_focus="#8547ee",       # focus 用 v5 主色
+
+            # 状态颜色 — 保持 v4 降饱和（已 OK）
+            success="#22c55e",     # 翠绿
+            warning="#f59e0b",     # 琥珀
+            error="#ef4444",       # 红
+            info="#7c3aed",        # 信息色 = 主色（统一）
+
+            # 滚动条
+            scrollbar_bg="#14171f",
+            scrollbar_handle="#6e7079",
+            scrollbar_hover="#7c7e88",
+
+            shadow="rgba(0, 0, 0, 0.65)"
+        )
+        super().__init__("深色主题", colors)
+
+
+class LightTheme(Theme):
+    """浅色主题"""
+
+    def __init__(self):
+        colors = ThemeColors(
+            # 主背景色 — v2.2 调整：拉开卡片与背景的对比度
+            # 旧版 bg_primary #eeecea / bg_secondary #f7f6f4 太接近导致卡片边界模糊
+            bg_primary="#e8e6e3",      # 主背景偏暖灰，更深一档
+            bg_secondary="#ffffff",    # 卡片纯白，与背景形成清晰分层
+            bg_tertiary="#dedcd9",
+            bg_elevated="#ffffff",
+
+            # 文字颜色 — 足够深，对比清晰
+            text_primary="#1c1c1e",
+            text_secondary="#48484a",
+            text_tertiary="#8e8e93",
+            text_disabled="#aeaeb2",
+
+            # 主题色（蓝色系）— Apple 风格蓝
+            accent_primary="#007aff",
+            accent_hover="#3395ff",
+            accent_pressed="#0062cc",
+
+            # 边框颜色 — v2.2 加深以提升卡片可见度
+            border_primary="#7d7d7a",
+            border_secondary="#cfcdc9",
+            border_focus="#0078fb",
+
+            # 状态颜色 — v2.2 调深以适配浅色背景，避免过度饱和
+            # 旧值 #34c759/#ff9500/#ff3b30 在浅色背景上对比度过强
+            success="#1f9e3e",
+            warning="#cc7700",
+            error="#d63638",
+            info="#007aff",
+
+            # 功能颜色
+            scrollbar_bg="#e8e7e5",
+            scrollbar_handle="#777675",
+            scrollbar_hover="#6a6967",
+
+            shadow="rgba(0, 0, 0, 0.08)"
+        )
+        super().__init__("浅色主题", colors)
+
+
+class GreenTheme(Theme):
+    """墨绿主题 — 深底 + 绿色调"""
+
+    def __init__(self):
+        colors = ThemeColors(
+            bg_primary="#161b18",
+            bg_secondary="#1e2722",
+            bg_tertiary="#28332c",
+            bg_elevated="#303d35",
+
+            text_primary="#d4ddd7",
+            text_secondary="#9aaa9f",
+            text_tertiary="#6b7d72",
+            text_disabled="#455049",
+
+            accent_primary="#4eca6a",
+            accent_hover="#6edd84",
+            accent_pressed="#3ab856",
+
+            border_primary="#6e7771",
+            border_secondary="#252f28",
+            border_focus="#4eca6a",
+
+            success="#4eca6a",
+            warning="#e8b339",
+            error="#e85454",
+            info="#4eca6a",
+
+            scrollbar_bg="#1a211c",
+            scrollbar_handle="#78837c",
+            scrollbar_hover="#859189",
+
+            shadow="rgba(0, 0, 0, 0.4)"
+        )
+        super().__init__("墨绿主题", colors)
+
+
+class PurpleTheme(Theme):
+    """紫夜主题 — 深底 + 紫色调"""
+
+    def __init__(self):
+        colors = ThemeColors(
+            bg_primary="#18161e",
+            bg_secondary="#211e2a",
+            bg_tertiary="#2c2836",
+            bg_elevated="#363040",
+
+            text_primary="#d8d4e0",
+            text_secondary="#a49cb2",
+            text_tertiary="#756c85",
+            text_disabled="#4a4455",
+
+            accent_primary="#9b6dff",
+            accent_hover="#b48fff",
+            accent_pressed="#8455e8",
+
+            border_primary="#736e7b",
+            border_secondary="#272230",
+            border_focus="#9b6dff",
+
+            success="#52d980",
+            warning="#e8b339",
+            error="#e85454",
+            info="#9b6dff",
+
+            scrollbar_bg="#1c1922",
+            scrollbar_handle="#7c7886",
+            scrollbar_hover="#8a8595",
+
+            shadow="rgba(0, 0, 0, 0.4)"
+        )
+        super().__init__("紫夜主题", colors)
+
+
+class WarmTheme(Theme):
+    """暖橙主题 — 浅暖底 + 橙色调"""
+
+    def __init__(self):
+        colors = ThemeColors(
+            bg_primary="#f0ebe5",
+            bg_secondary="#f8f4ef",
+            bg_tertiary="#e4ded6",
+            bg_elevated="#f2ede7",
+
+            text_primary="#2c2420",
+            text_secondary="#5c4f44",
+            text_tertiary="#8c7e72",
+            text_disabled="#b0a498",
+
+            accent_primary="#e07830",
+            accent_hover="#f09048",
+            accent_pressed="#c86820",
+
+            border_primary="#858079",
+            border_secondary="#ddd6cc",
+            border_focus="#c3682a",
+
+            success="#4aaa5a",
+            warning="#e09030",
+            error="#d94040",
+            info="#e07830",
+
+            scrollbar_bg="#eae4dc",
+            scrollbar_handle="#7d776f",
+            scrollbar_hover="#706a63",
+
+            shadow="rgba(60, 40, 20, 0.08)"
+        )
+        super().__init__("暖橙主题", colors)
+
+
+class ContrastTheme(Theme):
+    """高对比主题 — 纯黑底 + 亮白字 + 强蓝"""
+
+    def __init__(self):
+        colors = ThemeColors(
+            bg_primary="#000000",
+            bg_secondary="#141414",
+            bg_tertiary="#222222",
+            bg_elevated="#2a2a2a",
+
+            text_primary="#ffffff",
+            text_secondary="#cccccc",
+            text_tertiary="#888888",
+            text_disabled="#555555",
+
+            accent_primary="#4dabff",
+            accent_hover="#70c0ff",
+            accent_pressed="#3090e0",
+
+            border_primary="#686868",
+            border_secondary="#2a2a2a",
+            border_focus="#4dabff",
+            border_control="#686868",   # RN-640：高对比主题给低视力用户，静止边显式钉回亮边
+
+            success="#44dd66",
+            warning="#ffbb33",
+            error="#ff4444",
+            info="#4dabff",
+
+            scrollbar_bg="#0a0a0a",
+            scrollbar_handle="#727272",
+            scrollbar_hover="#808080",
+
+            shadow="rgba(0, 0, 0, 0.6)"
+        )
+        super().__init__("高对比主题", colors)
+
+
+class RoseTheme(Theme):
+    """玫瑰主题 — 浅粉底 + 玫红色调"""
+
+    def __init__(self):
+        colors = ThemeColors(
+            bg_primary="#f0eaec",
+            bg_secondary="#f8f3f5",
+            bg_tertiary="#e4dce0",
+            bg_elevated="#f2ecee",
+
+            text_primary="#2c2028",
+            text_secondary="#5c4854",
+            text_tertiary="#8c7682",
+            text_disabled="#b09aa6",
+
+            accent_primary="#d4507a",
+            accent_hover="#e06890",
+            accent_pressed="#c04068",
+
+            border_primary="#857e82",
+            border_secondary="#ddd4d8",
+            border_focus="#d4507a",
+
+            success="#4aaa5a",
+            warning="#e09030",
+            error="#d94040",
+            info="#d4507a",
+
+            scrollbar_bg="#eae2e6",
+            scrollbar_handle="#7c7579",
+            scrollbar_hover="#70686c",
+
+            shadow="rgba(60, 20, 40, 0.08)"
+        )
+        super().__init__("玫瑰主题", colors)
+
+
+class OceanTheme(Theme):
+    """深海主题 — 深蓝底 + 青蓝色调"""
+
+    def __init__(self):
+        colors = ThemeColors(
+            bg_primary="#141820",
+            bg_secondary="#1a2030",
+            bg_tertiary="#242c3a",
+            bg_elevated="#2c3444",
+
+            text_primary="#d0d8e4",
+            text_secondary="#94a0b4",
+            text_tertiary="#667080",
+            text_disabled="#404a58",
+
+            accent_primary="#38b0d0",
+            accent_hover="#50c8e8",
+            accent_pressed="#2898b8",
+
+            border_primary="#6b717c",
+            border_secondary="#202838",
+            border_focus="#38b0d0",
+
+            success="#40c878",
+            warning="#e0a830",
+            error="#e05050",
+            info="#38b0d0",
+
+            scrollbar_bg="#161c26",
+            scrollbar_handle="#767b86",
+            scrollbar_hover="#7f8a96",
+
+            shadow="rgba(0, 0, 0, 0.45)"
+        )
+        super().__init__("深海主题", colors)
+
+
+class MinimalTheme(Theme):
+    """极简主题 - 完全清空样式，使用系统默认外观"""
+    
+    def __init__(self):
+        # 创建一个占位符颜色配置（不会被使用）
+        colors = ThemeColors(
+            bg_primary="#ffffff",
+            bg_secondary="#ffffff",
+            bg_tertiary="#f0f0f0",
+            bg_elevated="#ffffff",
+            text_primary="#000000",
+            text_secondary="#555555",
+            text_tertiary="#888888",
+            text_disabled="#cccccc",
+            accent_primary="#808080",
+            accent_hover="#999999",
+            accent_pressed="#666666",
+            border_primary="#e8e8e8",
+            border_secondary="#f5f5f5",
+            border_focus="#999999",
+            success="#888888",
+            warning="#888888",
+            error="#888888",
+            info="#888888",
+            scrollbar_bg="#ffffff",
+            scrollbar_handle="#838383",
+            scrollbar_hover="#757575",
+            shadow="rgba(0, 0, 0, 0.02)"
+        )
+        super().__init__("极简主题", colors)
+    
+    def generate_stylesheet(self) -> str:
+        """极简主题返回空样式表，使用系统默认样式"""
+        return ""
+
+
+class ThemeManager:
+    """主题管理器"""
+    
+    _instance = None
+    
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+    
+    def __init__(self):
+        if not hasattr(self, '_initialized'):
+            self.logger = get_logger()
+            self.themes: Dict[str, Theme] = {
+                "dark": DarkTheme(),
+                "light": LightTheme(),
+                "green": GreenTheme(),
+                "purple": PurpleTheme(),
+                "ocean": OceanTheme(),
+                "warm": WarmTheme(),
+                "rose": RoseTheme(),
+                "contrast": ContrastTheme(),
+                "minimal": MinimalTheme()
+            }
+            self.current_theme_name = "dark"  # 默认深色主题
+            self._theme_changed_callbacks = []  # 主题变化回调
+            self._initialized = True
+    
+    @property
+    def current_theme(self) -> Theme:
+        """获取当前主题"""
+        return self.themes[self.current_theme_name]
+    
+    def register_theme_changed_callback(self, callback):
+        """注册主题变化回调"""
+        if callback not in self._theme_changed_callbacks:
+            self._theme_changed_callbacks.append(callback)
+            # 2.1.4 日志降噪：每个组件注册都打 info 会在启动期刷 100+ 条，降为 debug
+            self.logger.debug("已注册主题变化回调")
+
+    def unregister_theme_changed_callback(self, callback):
+        """注销主题变化回调，防止内存泄漏"""
+        try:
+            self._theme_changed_callbacks.remove(callback)
+        except ValueError:
+            pass
+    
+    def set_theme(self, theme_name: str):
+        """设置主题"""
+        if theme_name in self.themes:
+            old_theme = self.current_theme_name
+            self.current_theme_name = theme_name
+            self.logger.info(f"已切换主题: {old_theme} -> {theme_name}")
+            
+            # 触发所有回调
+            for callback in self._theme_changed_callbacks:
+                try:
+                    callback()
+                except Exception as e:
+                    self.logger.error(f"主题变化回调执行失败: {e}")
+        else:
+            self.logger.warning(f"未找到主题: {theme_name}")
+    
+    def get_stylesheet(self) -> str:
+        """获取当前主题的样式表"""
+        return self.current_theme.generate_stylesheet()
+    
+    def get_color(self, color_name: str) -> str:
+        """获取当前主题的指定颜色"""
+        return getattr(self.current_theme.colors, color_name, "#000000")
+
+# 全局主题管理器实例
+_theme_manager = ThemeManager()
+
+
+def get_theme_manager() -> ThemeManager:
+    """获取主题管理器实例"""
+    return _theme_manager
+
+
+def get_current_theme() -> Theme:
+    """获取当前主题"""
+    return _theme_manager.current_theme
+
+
+def get_stylesheet() -> str:
+    """获取当前样式表"""
+    return _theme_manager.get_stylesheet()
+
+
+def get_color(color_name: str) -> str:
+    """获取当前主题颜色"""
+    return _theme_manager.get_color(color_name)

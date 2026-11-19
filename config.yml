@@ -1,0 +1,14 @@
+# 修改后重启源码版。true 阻断远端联网，本机 CS2 GSI 继续可用。
+block_remote_network: true
+
+# true 从这里读取公告，false 恢复原版公告行为。
+replace_announcement: true
+announcement_title: 帆派助手开放版
+announcement_text: |-
+  **帆派助手开放版** 是 *帆派助手开放版* Counter-Strike 2 GSI 客户端的反混淆源码版本，几乎是由 [ChatGPT](https://chatgpt.com/) 协助逆向得到。
+
+  原版使用 PyInstaller 打包，内含 Python 3.13 字节码，其中 8 个自有模块使用 PyArmor 保护。恢复工作以已安装的帆派助手开放版 2.3.0 为样本，通过静态提取、反汇编与逐模块重建，得到 200 个可读的 Python 模块。192 个模块通过原始安装字节码比对，8 个 PyArmor 模块通过解包后的指令或控制流核验。
+
+  可运行源码版附带 Python 3.13、第三方依赖和原版资源，可双击「启动帆派助手开放版.cmd」运行。在隔离环境中验证了 Windows 主窗口、28 个页面、本机 GSI 和资源导入等功能。
+
+  > ⚠️ **供学习与研究使用。** 可用于研究 CS2 GSI、Python 字节码、应用打包及混淆与反混淆技术。请在获准的环境中测试，并遵守游戏与服务器规则。
